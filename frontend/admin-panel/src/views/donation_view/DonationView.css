@@ -1,0 +1,82 @@
+.donation-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.donation-view-donations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.donation-view-donation-item-grey {
+  color: grey;
+}
+
+.donation-view-donation-item {
+  width: 80%;
+  background-color: #1b1b1b;
+  border-radius: 10px;
+  padding: 1rem 1rem 0;
+}
+
+.donation-view-donation-item-header {
+  display: flex;
+}
+
+.donation-view-donation-item-header {
+  flex-grow: 1;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.donation-view-donation-item-header-amount {
+  color: #f26822;
+}
+
+.donation-view-donation-item-header-confirmedAt {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.donation-view-donation-item-donationtext {
+  margin-top: 1rem;
+  word-wrap: break-word;
+}
+
+.donation-view-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 5rem;
+}
+
+.donation-view-pagination {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.donation-view-page-num:hover,
+.donation-view-arrows:hover {
+  cursor: pointer;
+  background-color: #f26822;
+  border-radius: 5px;
+}
+
+.donation-view-page-num-link {
+  display: block;
+  padding: 0.2rem 0.5rem;
+  font-size: 1.3rem;
+}
+.donation-view-arrows {
+  display: block;
+  padding: 0.2rem 0.4rem;
+  font-size: 1.3rem;
+}
+
+.donation-view-active-link {
+  background-color: #f26822;
+  border-radius: 5px;
+}

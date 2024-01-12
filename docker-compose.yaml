@@ -1,0 +1,65 @@
+version: '3'
+services:
+  
+  postgres-db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "54321:5432"
+    volumes:
+      - /var/docker_data/simple_monero_donation_service/postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  monero-rpc:
+    image: sethsimmons/simple-monero-wallet-rpc:latest
+    restart: unless-stopped
+    ports:
+      - 38083:38083
+    volumes:
+      - /var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet:/home/monero/wallet
+    command: 
+      - "--stagenet" 
+      - "--daemon-address=stagenet.community.rino.io:38081"
+      - "--trusted-daemon" 
+      - "--rpc-bind-port=38083" 
+      - "--rpc-login=user:pass" 
+      - "--wallet-dir=/home/monero/wallet"
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env.dev
+    ports:
+      - 8081:8080
+    depends_on:
+      - monero-rpc
+      - postgres-db
+
+  frontend-client:
+    build:
+      context: ./frontend/client
+    ports:
+      - "81:80"
+    environment:
+      - VITE_API_BASE_URL=http://backend:8080
+    depends_on:
+      - backend
+
+  frontend-admin:
+    build:
+      context: ./frontend/admin-panel
+    ports:
+      - "82:80"
+    environment:
+      - VITE_API_BASE_URL=http://backend:8080
+    depends_on:
+      - backend
+    
+
+      
+

@@ -1,0 +1,43 @@
+.user-profile-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-profile-view-header {
+  height: 4rem;
+}
+
+.user-profile-view-main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.user-profile-conatiner {
+  padding: 2rem;
+  background-color: #1e1e1e;
+  min-width: 350px;
+  width: 40%;
+  border-radius: 5px;
+}
+
+.user-profile-header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.user-profile-header-username {
+  font-size: 1.8rem;
+}
+
+.user-profile-main {
+  margin-top: 1rem;
+}
+
+.user-profile-main-greeting-text {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}

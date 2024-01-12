@@ -1,0 +1,34 @@
+.readonly_container_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 2.5rem;
+}
+
+.readonly_container {
+  overflow-x: auto;
+  flex-grow: 1;
+  width: 0;
+  border: 2px solid #0b0b0b;
+  background-color: #202020;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem;
+  padding-right: 1.7rem;
+  max-width: fit-content;
+  white-space: nowrap;
+}
+
+.readonly_field {
+  background-color: #0b0b0b;
+}
+
+#copyBtn {
+  position: relative;
+  right: 1.45rem;
+}
+
+#copyBtn:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,63 @@
+.invoice_container {
+  z-index: 99;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  box-shadow: 1px 1px 1px #121212;
+}
+
+.invoice {
+  width: 80%;
+  max-width: 40rem;
+  max-height: 25rem;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #242424;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.subaddress {
+  width: 90%;
+}
+
+.qr_code_container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.amount {
+  width: 90%;
+  margin: 0.5rem 0 0.7rem 0;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#closeBtn:hover {
+  cursor: pointer;
+}
+
+.image_status {
+  width: 50%;
+}

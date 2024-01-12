@@ -1,0 +1,34 @@
+.menu_container {
+  padding: 20px;
+}
+
+.header {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close_menu_btn {
+  padding: 5px 10px 7px 10px;
+  border-radius: 5px;
+}
+.close_menu_btn:hover {
+  cursor: pointer;
+  background-color: var(--active-element-color);
+}
+
+.action_list {
+  width: 100%;
+}
+
+.action_list_item {
+  width: 100%;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.action_list_item:hover {
+  background-color: var(--active-element-color);
+  cursor: pointer;
+}

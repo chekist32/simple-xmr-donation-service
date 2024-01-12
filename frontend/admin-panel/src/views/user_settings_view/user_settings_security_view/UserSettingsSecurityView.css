@@ -1,0 +1,12 @@
+.user-settings-security-view-header {
+  display: flex;
+  justify-content: center;
+}
+
+.user-settings-security-view-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

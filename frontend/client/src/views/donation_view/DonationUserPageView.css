@@ -1,0 +1,44 @@
+.donation-user-page-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.donation-page-conatiner {
+  padding: 2rem;
+  background-color: #1e1e1e;
+  min-width: 350px;
+  width: 80%;
+  border-radius: 5px;
+}
+
+.donation-page-header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.donation-page-header-username {
+  font-size: 1.8rem;
+}
+
+.donation-page-main {
+  margin-top: 1rem;
+}
+
+.donation-page-main-greeting-text {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.donation-page-main-donate-form-container {
+  margin-top: 1.5rem;
+}
+
+.donation-page-main-donate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}

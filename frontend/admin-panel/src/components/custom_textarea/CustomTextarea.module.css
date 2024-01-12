@@ -1,0 +1,27 @@
+.textarea_container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.textarea {
+  border: 2px solid #0b0b0b;
+  background-color: #202020;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  min-height: 10rem;
+  padding: 0.5rem;
+  resize: none;
+  width: 100%;
+}
+
+.textarea:focus {
+  outline: none;
+  border: 2px solid #f26822;
+}
+
+.textarea::placeholder {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+}

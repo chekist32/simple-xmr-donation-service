@@ -1,0 +1,7 @@
+.error_message_container {
+  width: 100%;
+}
+
+.error_message {
+  color: red;
+}

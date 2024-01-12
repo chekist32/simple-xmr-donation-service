@@ -1,0 +1,14 @@
+.user-settings-profile-view-main-avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.user-settings-profile-view-main-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-settings-profile-view-main-username {
+  margin-top: 0.5rem;
+}

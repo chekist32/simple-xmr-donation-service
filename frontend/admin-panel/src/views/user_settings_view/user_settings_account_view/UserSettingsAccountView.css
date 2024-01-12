@@ -1,0 +1,12 @@
+.user-settings-account-view-header {
+  display: flex;
+  justify-content: center;
+}
+
+.user-settings-account-view-email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

@@ -1,0 +1,19 @@
+.unauthorized_user_panel {
+  display: flex;
+  gap: 1rem;
+}
+
+.unauthorized_user_panel__link {
+  border: 2px solid white;
+  border-radius: 25px;
+  padding: 0.7rem 1.5rem 0.7rem 1.5rem;
+}
+
+.unauthorized_user_panel__link:hover {
+  color: #f26822;
+  border: 2px solid #f26822;
+}
+
+.authorized_user_panel__username:hover {
+  cursor: pointer;
+}
