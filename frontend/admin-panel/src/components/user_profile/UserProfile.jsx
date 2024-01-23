@@ -1,15 +1,13 @@
-import React from "react";
+import PropTypes from 'prop-types';
 
 import styles from "./UserProfile.module.css";
 
-import Avatar from "../avatar/Avatar";
+import Avatar from "@shared-components/avatar/Avatar";
 
 function UserProfile({ donationUserData, height, width }) {
   const containerStyles = {};
   typeof height === "string" ? (containerStyles.height = height) : null;
   typeof width === "string" ? (containerStyles.width = width) : null;
-
-  // const test = Object.entries(containerStyles).length > 1 && containerStyles
 
   return (
     <>
@@ -33,6 +31,15 @@ function UserProfile({ donationUserData, height, width }) {
       </div>
     </>
   );
+}
+
+UserProfile.propTypes = {
+  height: PropTypes.string,
+  width: PropTypes.string,
+  donationUserData: PropTypes.shape({
+      username: PropTypes.string, 
+      greetingText: PropTypes.string
+    })
 }
 
 export default UserProfile;

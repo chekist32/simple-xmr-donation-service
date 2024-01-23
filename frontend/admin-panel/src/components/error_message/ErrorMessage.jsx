@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from 'prop-types';
 
 import styles from "./ErrorMessage.module.css";
 
@@ -10,6 +10,10 @@ function ErrorMessage({ errorMsg }) {
       </div>
     </>
   );
+}
+
+ErrorMessage.propTypes = {
+  errorMsg: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
 }
 
 export default ErrorMessage;

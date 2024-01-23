@@ -1,12 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import "./EmailConfirmationView.css";
-import LoadingSpinner from "../../components/loading_spinner/LoadingSpinner";
+import LoadingSpinner from "@components/loading_spinner/LoadingSpinner";
 
 function EmailConfirmationView() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [isSubmitting, setIsSubmitting] = useState(true);
   const [hasConfirmationSucceeded, setHasConfirmationSucceeded] =
@@ -77,7 +77,7 @@ function EmailConfirmationView() {
 
   async function confirmEmail(token) {
     try {
-      const res = await axios.get(
+      await axios.get(
         import.meta.env.VITE_API_BASE_URL + "/api/auth/register/confirmation",
         {
           params: { token: token },

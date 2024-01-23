@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { fetchUserDataApiCall } from "../api_calls/UserApiCalls";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function RequireAuthRoute({ children }) {
   const navigate = useNavigate();

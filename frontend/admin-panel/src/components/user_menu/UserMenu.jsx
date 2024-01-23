@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import AsidePanel from "../aside_panel/AsidePanel";
+import PropTypes from 'prop-types';
+
+import { useEffect, useState } from "react";
+import AsidePanel from "@components/aside_panel/AsidePanel";
 
 import styles from "./UserMenu.module.css";
 import { getUserStorage } from "../../storage/CustomUserStorage";
@@ -65,6 +67,10 @@ function UserMenu({ closeHandler }) {
   return (
     <AsidePanel position="right" closeHandler={closeHandler} content={Menu()} />
   );
+}
+
+UserMenu.propTypes = {
+  closeHandler: PropTypes.func.isRequired
 }
 
 export default UserMenu;

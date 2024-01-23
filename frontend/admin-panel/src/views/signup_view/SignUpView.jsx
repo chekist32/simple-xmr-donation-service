@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./SignUpView.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "@components/navbar/Navbar";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
 import axios from "axios";
-import LoadingSpinner from "../../components/loading_spinner/LoadingSpinner";
-import ErrorMessage from "../../components/error_message/ErrorMessage";
-import CustomInput from "../../components/custom_input/CustomInput";
-import CustomButton from "../../components/custom_button/CustomButton";
+import LoadingSpinner from "@components/loading_spinner/LoadingSpinner";
+import ErrorMessage from "@components/error_message/ErrorMessage";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomButton from "@shared-components/custom_button/CustomButton";
 
 function SignUpView() {
   const [errorMsg, setErrorMsg] = useState("");
@@ -43,7 +43,7 @@ function SignUpView() {
 
   const onSubmitHandler = async (data) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         import.meta.env.VITE_API_BASE_URL + "/api/auth/register",
         {
           username: data.username,

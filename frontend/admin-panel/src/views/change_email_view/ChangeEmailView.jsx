@@ -1,10 +1,10 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import "./ChangeEmailView.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 function ChangeEmailView() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const token = searchParams.get("token");

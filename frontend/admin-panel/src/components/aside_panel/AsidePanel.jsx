@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
+import PropTypes from 'prop-types';
 
 import styles from "./AsidePanel.module.css";
 
@@ -30,4 +31,13 @@ function AsidePanel({ content, position, closeHandler }) {
   );
 }
 
+AsidePanel.propTypes = {
+  content: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  position: PropTypes.string,
+  closeHandler: PropTypes.func.isRequired
+}
+
 export default AsidePanel;
+
+
+

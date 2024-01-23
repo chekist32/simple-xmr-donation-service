@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { getUserStorage } from "../../storage/CustomUserStorage";
+import PropTypes from 'prop-types';
+
+import { useState } from "react";
 
 import styles from "./Avatar.module.css";
-import CustomButton from "../custom_button/CustomButton";
+import CustomButton from "@shared-components/custom_button/CustomButton";
 
 function Avatar({ src, width, height, hasEditBtn }) {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("user");
 
   const imgWidth = width ? width : "100px";
   const imgHeight = height ? height : "100px";
-
-  useEffect(() => {
-    const userData = getUserStorage();
-
-    if (userData.username) setUsername(userData.username);
-  }, []);
 
   return (
     <>
@@ -43,6 +38,13 @@ function Avatar({ src, width, height, hasEditBtn }) {
       </div>
     </>
   );
+}
+
+Avatar.propTypes = {
+  src: PropTypes.string,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  hasEditBtn: PropTypes.bool
 }
 
 export default Avatar;

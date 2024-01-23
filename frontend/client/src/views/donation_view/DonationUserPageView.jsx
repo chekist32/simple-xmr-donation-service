@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Avatar from "../../components/avatar/Avatar";
-import CustomTextarea from "../../components/custom_textarea/CustomTextarea";
-import CustomInput from "../../components/custom_input/CustomInput";
 
 import axios from "axios";
 
 import "./DonationUserPageView.css";
-import CustomButton from "../../components/custom_button/CustomButton";
-import Invoice from "../../components/invoice/Invoice";
 
-//TODO: donation page
+import Invoice from "@components/invoice/Invoice";
+import Avatar from "@shared-components/avatar/Avatar";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomButton from "@shared-components/custom_button/CustomButton";
+import CustomTextarea from "@shared-components/custom_textarea/CustomTextarea";
+
 function DonationUserPageView() {
   const [donationUserData, setDonationUserData] = useState({});
   const [paymentData, setPaymentData] = useState({});

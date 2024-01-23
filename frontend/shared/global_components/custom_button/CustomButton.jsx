@@ -1,5 +1,3 @@
-import React from "react";
-
 import styles from "./CustomButton.module.css";
 
 function CustomButton({ buttonProps, children, id }) {

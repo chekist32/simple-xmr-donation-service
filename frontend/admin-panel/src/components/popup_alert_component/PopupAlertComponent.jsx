@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import PropTypes from 'prop-types';
 
 import styles from "./PopupAlertComponent.module.css";
 
@@ -42,6 +42,13 @@ function PopupAlert({ header, mainContent, closeHandler, timeout }) {
       </div>
     </>
   );
+}
+
+PopupAlert.propTypes = {
+  header: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  mainContent: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  closeHandler: PropTypes.func.isRequired,
+  timeout: PropTypes.number
 }
 
 export default PopupAlert;

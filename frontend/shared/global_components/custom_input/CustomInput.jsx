@@ -1,5 +1,3 @@
-import React from "react";
-
 import styles from "./CustomInput.module.css";
 
 function CustomInput({ inputProps }) {

@@ -7,14 +7,13 @@ import { z } from "zod";
 import axios from "axios";
 
 import "./ResetPasswordView.css";
-import CustomInput from "../../components/custom_input/CustomInput";
-import CustomButton from "../../components/custom_button/CustomButton";
-import LoadingSpinner from "../../components/loading_spinner/LoadingSpinner";
-import CeneteredPopupAlert from "../../components/centered_popup_alert/CeneteredPopupAlertComponent";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomButton from "@shared-components/custom_button/CustomButton";
+import LoadingSpinner from "@components/loading_spinner/LoadingSpinner";
+import CeneteredPopupAlert from "@components/centered_popup_alert/CeneteredPopupAlertComponent";
 
 function ResetPasswordView() {
   const [errorMsg, setErrorMsg] = useState("");
-  const [errorObj, setErrorObj] = useState("");
   const [token, setToken] = useState("");
   const [searchParams] = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);

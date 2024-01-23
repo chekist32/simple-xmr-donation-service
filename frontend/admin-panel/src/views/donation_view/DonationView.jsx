@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 
 import "./DonationView.css";
 
 import axios from "axios";
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "@components/navbar/Navbar";
 
 function DonationView() {
   const [data, setData] = useState([]);

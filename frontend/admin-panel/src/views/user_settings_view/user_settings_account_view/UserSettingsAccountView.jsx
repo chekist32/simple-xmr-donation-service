@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
 
 import "./UserSettingsAccountView.css";
 import "../GlobalUserSettingsSubmoduleStyles.css";
-import CustomInput from "../../../components/custom_input/CustomInput";
-import CustomButton from "../../../components/custom_button/CustomButton";
-import ErrorMessage from "../../../components/error_message/ErrorMessage";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomButton from "@shared-components/custom_button/CustomButton";
+import ErrorMessage from "@components/error_message/ErrorMessage";
 import axios from "axios";
-import CeneteredPopupAlert from "../../../components/centered_popup_alert/CeneteredPopupAlertComponent";
+import CeneteredPopupAlert from "@components/centered_popup_alert/CeneteredPopupAlertComponent";
 
 function UserSettingsAccountView() {
   const [errorMsg, setErrorMsg] = useState("");

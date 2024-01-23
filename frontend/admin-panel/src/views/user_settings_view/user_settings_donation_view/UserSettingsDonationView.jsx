@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./UserSettingsDonationView.css";
 import "../GlobalUserSettingsSubmoduleStyles.css";
 import axios from "axios";
-import ReadonlyField from "../../../components/readonly_field/ReadonlyField";
-import CustomButton from "../../../components/custom_button/CustomButton";
+import ReadonlyField from "@shared-components/readonly_field/ReadonlyField";
+import CustomButton from "@shared-components/custom_button/CustomButton";
 
 function UserSettingsDonationView() {
   const [donationSettingsData, setDonationSettingsData] = useState({});

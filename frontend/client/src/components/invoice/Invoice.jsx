@@ -1,9 +1,11 @@
+import PropTypes from 'prop-types';
+
 import QRCode from "react-qr-code";
 
 import styles from "./Invoice.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ReadonlyField from "../readonly_field/ReadonlyField";
+import ReadonlyField from '@shared-components/readonly_field/ReadonlyField';
 
 function Invoice({ paymentData, timeout, closeHandler }) {
   const [msg, setMsg] = useState("");
@@ -154,6 +156,16 @@ function Invoice({ paymentData, timeout, closeHandler }) {
       {status === "failure" && failure()}
     </>
   );
+}
+
+Invoice.propTypes = {
+  timeout: PropTypes.number,
+  closeHandler: PropTypes.func.isRequired,
+  paymentData: PropTypes.shape({
+    paymentId: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+    minAmount: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+    subaddress: PropTypes.string
+  })
 }
 
 export default Invoice;

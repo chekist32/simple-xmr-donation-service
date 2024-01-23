@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./UserSettingsView.css";
-import Navbar from "../../components/navbar/Navbar";
-import Avatar from "../../components/avatar/Avatar";
+import Navbar from "@components/navbar/Navbar";
+import Avatar from "@shared-components/avatar/Avatar";
 import { fetchUserDataApiCall } from "../../api_calls/UserApiCalls";
 import { Link, Outlet } from "react-router-dom";
 
-function UserSettingsView({ parentEndpoint }) {
+function UserSettingsView() {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {

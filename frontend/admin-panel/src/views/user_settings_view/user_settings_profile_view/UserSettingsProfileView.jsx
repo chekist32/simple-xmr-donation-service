@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./UserSettingsProfileView.css";
-import Avatar from "../../../components/avatar/Avatar";
+import Avatar from "@shared-components/avatar/Avatar";
 import { fetchProfileDataApiCall } from "../../../api_calls/UserApiCalls";
-import CustomInput from "../../../components/custom_input/CustomInput";
-import CustomTextarea from "../../../components/custom_textarea/CustomTextarea";
-import CustomButton from "../../../components/custom_button/CustomButton";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomTextarea from "@shared-components/custom_textarea/CustomTextarea";
+import CustomButton from "@shared-components/custom_button/CustomButton";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
-import ErrorMessage from "../../../components/error_message/ErrorMessage";
+import ErrorMessage from "@components/error_message/ErrorMessage";
 import axios from "axios";
 
 function UserSettingsProfileView() {

@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "@components/navbar/Navbar";
 
 import "./SignInView.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
 import { z } from "zod";
 import axios from "axios";
-import CustomInput from "../../components/custom_input/CustomInput";
-import CustomButton from "../../components/custom_button/CustomButton";
+import CustomInput from "@shared-components/custom_input/CustomInput";
+import CustomButton from "@shared-components/custom_button/CustomButton";
 
 function SignInView() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const redirectTo = searchParams.get("redirect");
 

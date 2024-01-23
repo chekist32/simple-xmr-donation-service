@@ -1,12 +1,12 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./UserPanel.module.css";
 import { Link } from "react-router-dom";
 import {
   getUserStorage,
   setUserStorage,
 } from "../../storage/CustomUserStorage";
-import UserMenu from "../user_menu/UserMenu";
+import UserMenu from "@components/user_menu/UserMenu";
 
 function UserPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

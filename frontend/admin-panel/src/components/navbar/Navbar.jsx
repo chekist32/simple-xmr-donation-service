@@ -1,6 +1,7 @@
-import React from "react";
+import PropTypes from 'prop-types';
+
 import { Link } from "react-router-dom";
-import UserPanel from "../user_panel/UserPanel";
+import UserPanel from "@components/user_panel/UserPanel";
 
 import styles from "./Navbar.module.css";
 
@@ -26,6 +27,10 @@ function Navbar({ showUserpanel }) {
       </nav>
     </>
   );
+}
+
+Navbar.propTypes = {
+  showUserpanel: PropTypes.bool
 }
 
 export default Navbar;

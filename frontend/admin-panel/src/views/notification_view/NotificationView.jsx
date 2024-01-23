@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./NotificationView.css";
 import { useSearchParams } from "react-router-dom";
@@ -7,7 +7,7 @@ function NotificationView() {
   const donationQueue = [];
   const [showFlag, setShowFlag] = useState(false);
   const [donationData, setDonationData] = useState({});
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const token = searchParams.get("token");
 
