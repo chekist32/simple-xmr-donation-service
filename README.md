@@ -89,7 +89,7 @@ services:
 This configuration can already be used in test purposes. Steps you need to complete in order to be able to run:
 1. Create ```/var/docker_data/simple_monero_donation_service/postgres``` directory.
 2. Create a monero view_only stagenet (for production setups mainnet) wallet and put it inside ```/var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet``` directory.
-3. On base of ```backend/.env.example``` 
+3. On the base of ```backend/.env.example``` 
 ``` shell
 # The name of your wallet file
 MONERO_WALLET_PATH=test1 
