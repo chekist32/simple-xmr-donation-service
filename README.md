@@ -86,9 +86,7 @@ services:
     depends_on:
       - backend
 ```
-This configuration can already be used in test purposes. <br>
-Steps you need to complete in order to be able to run: 
-
+This configuration can already be used in test purposes. Steps you need to complete in order to be able to run:
 1. Create ```/var/docker_data/simple_monero_donation_service/postgres``` directory.
 2. Create a monero view_only stagenet (for production setups mainnet) wallet and put it inside ```/var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet``` directory.
 3. On base of ```backend/.env.example``` 
@@ -132,4 +130,9 @@ create ```.env.dev``` file and put it inside ```backend``` directory.
 
 ## Usage 
 Here is the preview video of usage. 
+
+https://github.com/chekist32/simple-xmr-donation-service/assets/41333847/2d6ae027-1d35-4cb7-a09d-1b2c45fa783a
+
+
+
 
