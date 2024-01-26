@@ -11,6 +11,8 @@ services:
     ports:
       - "54321:5432"
     volumes:
+        # Here you should paste a path (directory) where 
+        # postgres-db container will persist its data.
       - /var/docker_data/simple_monero_donation_service/postgres:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
@@ -20,12 +22,15 @@ services:
     ports:
       - 38083:38083
     volumes:
+        # Here you should paste a path (directory) where the view-only monero wallet is located.
       - /var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet:/home/monero/wallet
     command: 
+        # In production should be set to "mainnet"
       - "--stagenet" 
       - "--daemon-address=stagenet.community.rino.io:38081"
       - "--trusted-daemon" 
       - "--rpc-bind-port=38083" 
+        # Credentials for accessing the monero wallet rpc (optional) 
       - "--rpc-login=user:pass" 
       - "--wallet-dir=/home/monero/wallet"
 
@@ -33,6 +38,8 @@ services:
     build:
       context: ./backend
     env_file:
+        # Here you can paste a path to the .env file for backend container.
+        # Example can be found under backend/env.example
       - ./backend/.env.dev
     ports:
       - 8081:8080
@@ -45,6 +52,7 @@ services:
       context: ./frontend
       dockerfile: client/Dockerfile
       args:
+          # A url mapped to the backend container
         - API_BASE_URL=http://localhost:8081
     ports:
       - "81:80"
@@ -56,6 +64,7 @@ services:
       context: ./frontend
       dockerfile: admin-panel/Dockerfile
       args:
+          # A url mapped to the backend container
         - API_BASE_URL=http://localhost:8081
     ports:
       - "82:80"
