@@ -135,9 +135,9 @@ https://github.com/chekist32/simple-xmr-donation-service/assets/41333847/2d6ae02
 
 
 ## Known Issues
-1. Lack of edit functionality for profile avatar on admin page.
-2. Lack of time zone conversion on admin page.
+1. Lack of an edit functionality for the profile avatar on the admin page.
+2. Lack of a time zone conversion on the admin page.
 
 
 ## Further Development
-1. Add ability to donate in other cryptocurrencies (at least in BTC and LTC).
+1. Add the ability to donate in other cryptocurrencies (at least in BTC and LTC).
