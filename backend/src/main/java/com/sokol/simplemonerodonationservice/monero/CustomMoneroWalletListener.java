@@ -76,7 +76,6 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
         if (checkRequirements(moneroTxWallet)) {
             moneroTxWallet.getIncomingTransfers().forEach(
                     moneroIncomingTransfer -> {
-                        System.out.println(moneroIncomingTransfer);
                         String incomingTransferAddress = moneroIncomingTransfer.getAddress();
                         moneroSubaddressScheduledExecutorService.cancelScheduledTask(incomingTransferAddress);
                         moneroSubaddressRepository.updateIsIdleBySubaddress(incomingTransferAddress, true);
