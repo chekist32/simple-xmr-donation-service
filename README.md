@@ -11,7 +11,7 @@ Selfhosted monero donation system written with [Spring Boot](https://spring.io/p
 
 ### Docker
 
-In the root folder you can find ```docker-compose.yaml``` file which is populated with example configuration.
+In the root folder you can find ```docker-compose.yml``` file which is populated with example configuration.
 ```yml
 version: '3'
 services:
@@ -32,22 +32,21 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   monero-rpc:
-    image: sethsimmons/simple-monero-wallet-rpc:latest
+    image: chekist32/monero-wallet-rpc:v0.18.3.1
     restart: unless-stopped
     ports:
       - 38083:38083
     volumes:
         # Here you should paste a path (directory) where the view-only monero wallet is located.
-      - /var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet:/home/monero/wallet
-    command: 
-        # In production should be set to "mainnet"
+      - /var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet:/monero/wallet
+    command:
+      # For reference see: https://github.com/chekist32/monero-wallet-rpc-docker/blob/master/docs/monero-wallet-rpc-man.md
       - "--stagenet" 
       - "--daemon-address=stagenet.community.rino.io:38081"
       - "--trusted-daemon" 
       - "--rpc-bind-port=38083" 
-        # Credentials for accessing the monero wallet rpc (optional) 
       - "--rpc-login=user:pass" 
-      - "--wallet-dir=/home/monero/wallet"
+      - "--wallet-dir=/monero/wallet"
 
   backend:
     build:
