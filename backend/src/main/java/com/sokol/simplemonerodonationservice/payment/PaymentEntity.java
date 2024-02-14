@@ -1,5 +1,6 @@
 package com.sokol.simplemonerodonationservice.payment;
 
+import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,11 +20,17 @@ public class PaymentEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now(ZoneOffset.UTC);
     private LocalDateTime confirmedAt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CoinType coinType;
 
     public PaymentEntity() { }
 
-    public PaymentEntity(double amount) {
+    public PaymentEntity(CoinType coinType) { this.coinType = coinType; }
+
+    public PaymentEntity(double amount, CoinType coinType) {
         this.amount = amount;
+        this.coinType = coinType;
     }
 
     public UUID getId() {
@@ -34,9 +41,7 @@ public class PaymentEntity {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(double amount) { this.amount = amount; }
 
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
@@ -56,5 +61,9 @@ public class PaymentEntity {
 
     public void setConfirmedAt(LocalDateTime confirmedAt) {
         this.confirmedAt = confirmedAt;
+    }
+
+    public CoinType getCoinType() {
+        return coinType;
     }
 }

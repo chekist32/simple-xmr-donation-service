@@ -1,6 +1,7 @@
 package com.sokol.simplemonerodonationservice.payment;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -22,11 +23,11 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public PaymentEntity createPayment() {
-        return paymentRepository.save(new PaymentEntity());
+    public PaymentEntity createPayment(CoinType coinType) {
+        return paymentRepository.save(new PaymentEntity(coinType));
     }
-    public PaymentEntity createPayment(double amount) {
-        return paymentRepository.save(new PaymentEntity(amount));
+    public PaymentEntity createPayment(double amount, CoinType coinType) {
+        return paymentRepository.save(new PaymentEntity(amount, coinType));
     }
 
     @Async
@@ -45,8 +46,6 @@ public class PaymentService {
             case CONFIRMED -> result.setResult(new ResponseEntity<>("Payment has been confirmed", HttpStatus.OK));
             case EXPIRED -> result.setResult(new ResponseEntity<>("Payment has been expired", HttpStatus.REQUEST_TIMEOUT));
         }
-
-
     }
 
     public void expirePayment(PaymentEntity payment) {
@@ -60,18 +59,19 @@ public class PaymentService {
         }
     }
 
-    public PaymentEntity confirmPayment(String paymentId) {
+    public PaymentEntity confirmPayment(String paymentId, double amount) {
         UUID paymentIdUUID = UUID.fromString(paymentId);
 
         PaymentEntity payment = paymentRepository.findById(paymentIdUUID)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no payment associated with such paymentId"));
 
-        return this.confirmPayment(payment);
+        return this.confirmPayment(payment, amount);
     }
 
-    public PaymentEntity confirmPayment(PaymentEntity payment) {
+    public PaymentEntity confirmPayment(PaymentEntity payment, double amount) {
         payment.setConfirmedAt(LocalDateTime.now(ZoneOffset.UTC));
         payment.setPaymentStatus(PaymentStatus.CONFIRMED);
+        payment.setAmount(amount);
 
         DeferredResult<ResponseEntity<Object>> result = pendindPaymentsHashMap.get(payment.getId());
         if (result != null) {
@@ -81,7 +81,4 @@ public class PaymentService {
 
         return paymentRepository.save(payment);
     }
-
-
-
 }

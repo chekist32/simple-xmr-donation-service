@@ -1,22 +1,20 @@
-package com.sokol.simplemonerodonationservice.monero;
+package com.sokol.simplemonerodonationservice.crypto.monero;
 
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.donation.DonationEntity;
 import com.sokol.simplemonerodonationservice.donation.DonationRepository;
 import com.sokol.simplemonerodonationservice.donation.DonationUtils;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressRepository;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressRepository;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
 import monero.wallet.model.MoneroOutputWallet;
 import monero.wallet.model.MoneroTxWallet;
 import monero.wallet.model.MoneroWalletListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 
 @Component
@@ -26,10 +24,9 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
     private final DonationRepository donationRepository;
     private final PaymentService paymentService;
-    private boolean confirmationRequired;
-    private int confirmationNum;
+    private CryptoConfirmationType confirmationType;
     private BigInteger minAmount;
-    @Autowired
+
     public CustomMoneroWalletListener(SseEmitterService sseEmitterService,
                                       MoneroSubaddressScheduledExecutorService moneroSubaddressScheduledExecutorService,
                                       DonationRepository donationRepository,
@@ -39,35 +36,40 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
                 sseEmitterService,
                 moneroSubaddressScheduledExecutorService,
                 moneroSubaddressRepository,
-                donationRepository, paymentService,
-                false,
-                0,
-                BigDecimal.valueOf(0.01*MoneroConfig.pp).toBigInteger()
+                donationRepository,
+                paymentService,
+                CryptoConfirmationType.UNCONFIRMED,
+                0.01
         );
     }
+
     public CustomMoneroWalletListener(SseEmitterService sseEmitterService,
                                       MoneroSubaddressScheduledExecutorService moneroSubaddressScheduledExecutorService,
                                       MoneroSubaddressRepository moneroSubaddressRepository,
                                       DonationRepository donationRepository,
                                       PaymentService paymentService,
-                                      boolean confirmationRequired,
-                                      int confirmationNum,
-                                      BigInteger minAmount) {
+                                      CryptoConfirmationType confirmationType,
+                                      double minAmount) {
         this.sseEmitterService = sseEmitterService;
         this.moneroSubaddressScheduledExecutorService = moneroSubaddressScheduledExecutorService;
         this.moneroSubaddressRepository = moneroSubaddressRepository;
         this.donationRepository = donationRepository;
         this.paymentService = paymentService;
-        this.confirmationRequired = confirmationRequired;
-        this.confirmationNum = confirmationNum;
-        this.minAmount = minAmount;
+        this.confirmationType = confirmationType;
+        this.updateMinAmount(minAmount);
     }
 
-    boolean checkRequirements(MoneroTxWallet moneroTxWallet) {
-        return moneroTxWallet.isIncoming() &&
-                (moneroTxWallet.isConfirmed() == confirmationRequired && moneroTxWallet.getNumConfirmations() == confirmationNum) &&
-                !moneroTxWallet.isDoubleSpendSeen() &&
-                moneroTxWallet.getIncomingAmount().compareTo(minAmount) != -1;
+    private boolean checkRequirements(MoneroTxWallet moneroTxWallet) {
+        boolean result = moneroTxWallet.isIncoming() && !moneroTxWallet.isDoubleSpendSeen();
+
+        switch (confirmationType) {
+            case UNCONFIRMED -> result &= !moneroTxWallet.isConfirmed();
+            case PARTIALLY_CONFIRMED -> result &= moneroTxWallet.isConfirmed() && moneroTxWallet.getNumConfirmations() == 0;
+            case FULLY_CONFIRMED -> result &= moneroTxWallet.isConfirmed() && moneroTxWallet.getNumConfirmations() == 10;
+            default -> { return false; }
+        }
+
+        return result && moneroTxWallet.getIncomingAmount().compareTo(minAmount) != -1;
     }
 
     @Override
@@ -86,19 +88,14 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
                     });
         }
     }
+
     public void sendConfirmedDonationAssociatedWithAddress(String moneroAddress, double amount) {
         Optional<DonationEntity> donationEntityOptional = donationRepository.findRelevantDonation(moneroAddress);
 
         if (donationEntityOptional.isPresent()) {
             DonationEntity donationEntity = donationEntityOptional.get();
 
-            donationEntity.setAmount(amount);
-            donationEntity.setConfirmedAt(LocalDateTime.now(ZoneOffset.UTC));
-            donationEntity.setIsPaymentConfirmed(true);
-
-            donationRepository.save(donationEntity);
-
-            paymentService.confirmPayment(donationEntity.getPayment());
+            paymentService.confirmPayment(donationEntity.getPayment(), amount);
 
             sseEmitterService.sendDonationMessageToAllClients(
                     DonationUtils.DonationEntityToDonationDTOMapper(donationEntity)
@@ -106,4 +103,12 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
         }
     }
 
+    public void updateMinAmount(double minAmount) {
+        if (minAmount > 0)
+            this.minAmount = BigDecimal.valueOf(minAmount*MoneroConfig.pp).toBigInteger();
+    }
+
+    public void updateCryptoConfirmationType(CryptoConfirmationType confirmationType) {
+        this.confirmationType = confirmationType;
+    }
 }

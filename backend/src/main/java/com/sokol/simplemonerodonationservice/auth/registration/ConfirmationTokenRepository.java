@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationTokenEntity, UUID> {
     Optional<ConfirmationTokenEntity> findConfirmationTokenEntityByToken(String token);
+
     @Modifying
     @Transactional
     @Query("""

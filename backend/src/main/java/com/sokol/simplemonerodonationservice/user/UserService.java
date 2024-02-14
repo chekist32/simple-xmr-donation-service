@@ -79,17 +79,17 @@ public class UserService {
         );
     }
 
-    public DonationSettingsDataDTO regenerateUserTokenByPrincipal(String principal) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
-
-        String newUserToken = UUID.randomUUID().toString();
-        user.setToken(newUserToken);
-
-        userRepository.save(user);
-
-        return new DonationSettingsDataDTO(newUserToken);
-    }
+//    public DonationSettingsDataDTO regenerateUserTokenByPrincipal(String principal) {
+//        UserEntity user = userRepository.findByPrincipal(principal)
+//                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+//
+//        String newUserToken = UUID.randomUUID().toString();
+//        user.setToken(newUserToken);
+//
+//        userRepository.save(user);
+//
+//        return new DonationSettingsDataDTO(newUserToken, );
+//    }
 
     public UserEntity changeUserPassword(String principal, ChangePasswordRequestDTO changePasswordRequestDTO) {
         UserEntity user = userRepository.findByPrincipal(principal)
@@ -125,6 +125,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
     public UserEntity resetUserPassword(String token, String newPassword) {
         ConfirmationTokenEntity confirmationToken = confirmationTokenService
                 .confirmResetPasswordConfirmationToken(token, passwordEncoder.encode(newPassword));
@@ -145,5 +146,4 @@ public class UserService {
 
         return this.implementUserEntityModificationRequest(confirmationToken.getUser(), confirmationToken.getModificationRequest());
     }
-
 }

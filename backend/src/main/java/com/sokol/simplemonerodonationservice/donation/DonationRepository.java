@@ -13,13 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface DonationRepository extends CrudRepository<DonationEntity, UUID> {
-    @Modifying
-    @Transactional
-    @Query("UPDATE DonationEntity SET isPaymentExpired = :isPaymentExpired WHERE id = :id")
-    void updateIsPaymentExpiredById(@Param("id") UUID id, @Param("isPaymentExpired") Boolean isPaymentExpired);
     @Query("SELECT d FROM DonationEntity d WHERE d.moneroSubaddress = :moneroSubaddress AND d.isPaymentExpired = false AND d.isPaymentConfirmed = false ORDER BY d.receivedAt DESC LIMIT 1")
     Optional<DonationEntity> findRelevantDonation(@Param("moneroSubaddress") String moneroSubaddress);
+
     List<DonationEntity> findByUserAndConfirmedAtNotNull(UserEntity user);
+
     List<DonationEntity> findByUserAndConfirmedAtNotNull(UserEntity user, Pageable pageable);
+
     long countByUserAndConfirmedAtNotNull(UserEntity user);
 }

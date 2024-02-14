@@ -1,12 +1,13 @@
-package com.sokol.simplemonerodonationservice.monero;
+package com.sokol.simplemonerodonationservice.crypto.monero;
 
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressEntity;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressService;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressEntity;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MoneroService {
     private final MoneroSubaddressService moneroSubaddressService;
+
     public MoneroService(MoneroSubaddressService moneroSubaddressService) {
         this.moneroSubaddressService = moneroSubaddressService;
     }

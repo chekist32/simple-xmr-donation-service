@@ -18,6 +18,7 @@ public class SseEmitterService {
     private final SseEmitter.SseEventBuilder keepAliveSseEventBuilder = SseEmitter.event().name("keep-alive").data("keep-alive");
     private final CopyOnWriteArrayList<SseEmitter> inMemoryDonationSseEmitterList = new CopyOnWriteArrayList<>();
     private final ScheduledExecutorService keepAliveExecutor = new ScheduledThreadPoolExecutor(1);
+
     public SseEmitterService() {
         keepAliveExecutor.scheduleAtFixedRate(this::sendKeepAliveMessage,0, 40, TimeUnit.SECONDS);
     }

@@ -20,6 +20,7 @@ public class UserUtils {
                 user.getAuthorities()
         );
     }
+
     public static Set<GrantedAuthority> RoleSetToGrantedAuthoritySetMapper(Set<Role> roles) {
         return roles
                 .stream()

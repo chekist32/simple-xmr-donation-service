@@ -53,11 +53,11 @@ public class UserController {
         return new ResponseEntity<>(donationService.getDonationSettingsDataDTOByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
-    @PutMapping("/settings/donation/gennewtoken")
+    @PutMapping("/settings/donation/genNewToken")
     public ResponseEntity<DonationSettingsDataDTO> generateNewUserToken(Principal principal) {
-        return new ResponseEntity<>(userService.regenerateUserTokenByPrincipal(principal.getName()), HttpStatus.CREATED);
+        return new ResponseEntity<>(donationService.regenerateDonationToken(principal.getName()), HttpStatus.CREATED);
     }
 
-
-
+    @PutMapping
+    public ResponseEntity
 }

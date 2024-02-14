@@ -18,11 +18,13 @@ public class HttpError {
         body.put("message", message);
         return body;
     }
+
     public static Map<String, Object> createDefaultErrorResponseBody(Exception ex, WebRequest request, HttpStatus httpStatus) {
         String message = ex.getMessage();
         String path = request.getDescription(false).split("=")[1];
         return createDefaultErrorResponseBody(message, path, httpStatus);
     }
+
     public static Map<String, Object> createDefaultErrorResponseBody(String message, String path, HttpStatus httpStatus) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", new Timestamp(System.currentTimeMillis()));

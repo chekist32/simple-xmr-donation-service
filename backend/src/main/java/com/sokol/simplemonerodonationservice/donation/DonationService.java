@@ -1,12 +1,13 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
-import com.sokol.simplemonerodonationservice.monero.MoneroService;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressEntity;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
+import com.sokol.simplemonerodonationservice.crypto.monero.MoneroService;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressEntity;
+import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
@@ -16,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -83,7 +82,6 @@ public class DonationService {
         DonationEntity createdDonation = new DonationEntity(
                 donationRequestDTO.senderUsername(),
                 donationRequestDTO.donationText(),
-                LocalDateTime.now(ZoneOffset.UTC),
                 user,
                 payment
         );
@@ -126,6 +124,7 @@ public class DonationService {
 
         return donationUserDataDTO;
     }
+
     public boolean validateToken(String token) {
         return userRepository.existsByToken(token);
     }
@@ -134,7 +133,19 @@ public class DonationService {
         UserEntity user = userRepository.findByPrincipal(principal)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
 
-        return new DonationSettingsDataDTO(user.getToken());
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+
+        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
     }
 
+    public DonationSettingsDataDTO regenerateDonationToken(String principal) {
+        UserEntity user = userRepository.findByPrincipal(principal)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+        donationUserData.regenerateToken();
+        donationUserDataRepository.save(donationUserData);
+
+        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
+    }
 }

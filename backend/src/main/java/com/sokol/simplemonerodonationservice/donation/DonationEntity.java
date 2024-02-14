@@ -5,6 +5,7 @@ import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Entity
@@ -18,14 +19,8 @@ public class DonationEntity {
     @Column(length = 300)
     private String donationText;
     private String moneroSubaddress;
-    private Double amount;
     @Column(nullable = false)
-    private LocalDateTime receivedAt;
-    private LocalDateTime confirmedAt;
-    @Column(nullable = false)
-    private boolean isPaymentConfirmed = false;
-    @Column(nullable = false)
-    private boolean isPaymentExpired = false;
+    private LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             nullable = false,
@@ -43,12 +38,10 @@ public class DonationEntity {
 
     public DonationEntity(String senderUsername,
                           String donationText,
-                          LocalDateTime receivedAt,
                           UserEntity user,
                           PaymentEntity payment) {
         this.senderUsername = senderUsername;
         this.donationText = donationText;
-        this.receivedAt = receivedAt;
         this.user = user;
         this.payment = payment;
     }
@@ -56,15 +49,11 @@ public class DonationEntity {
     public DonationEntity(String senderUsername,
                           String donationText,
                           String moneroSubaddress,
-                          Double amount,
-                          LocalDateTime receivedAt,
                           UserEntity user,
                           PaymentEntity payment) {
         this.senderUsername = senderUsername;
         this.donationText = donationText;
         this.moneroSubaddress = moneroSubaddress;
-        this.amount = amount;
-        this.receivedAt = receivedAt;
         this.user = user;
         this.payment = payment;
     }
@@ -89,37 +78,11 @@ public class DonationEntity {
         this.moneroSubaddress = moneroSubaddress;
     }
 
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
     public LocalDateTime getReceivedAt() {
         return receivedAt;
-    }
-
-    public LocalDateTime getConfirmedAt() {
-        return confirmedAt;
-    }
-
-    public void setConfirmedAt(LocalDateTime confirmedAt) {
-        this.confirmedAt = confirmedAt;
-    }
-
-    public boolean getIsPaymentConfirmed() {
-        return isPaymentConfirmed;
-    }
-
-    public void setIsPaymentConfirmed(boolean isPaymentConfirmed) {
-        this.isPaymentConfirmed = isPaymentConfirmed;
     }
 
     public PaymentEntity getPayment() {
         return payment;
     }
-
-
 }

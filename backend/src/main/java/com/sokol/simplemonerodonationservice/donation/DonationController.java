@@ -17,6 +17,7 @@ import java.util.List;
 public class DonationController {
     private final DonationService donationService;
     private final SseEmitterService sseEmitterService;
+
     public DonationController(DonationService donationService,
                               SseEmitterService sseEmitterService) {
         this.donationService = donationService;

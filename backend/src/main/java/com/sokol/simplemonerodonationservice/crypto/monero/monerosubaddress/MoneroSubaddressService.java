@@ -1,7 +1,7 @@
-package com.sokol.simplemonerodonationservice.monero.monerosubaddress;
+package com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.monero.MoneroUtils;
+import com.sokol.simplemonerodonationservice.crypto.monero.MoneroUtils;
 import jakarta.annotation.PostConstruct;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class MoneroSubaddressService {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
     private final MoneroWalletRpc wallet;
+
     public MoneroSubaddressService(MoneroSubaddressRepository moneroSubaddressRepository,
                                    MoneroWalletRpc wallet) {
         this.moneroSubaddressRepository = moneroSubaddressRepository;

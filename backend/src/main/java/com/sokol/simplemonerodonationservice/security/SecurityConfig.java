@@ -59,8 +59,10 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("SESSION", "JSESSION")
                         .logoutSuccessUrl("/api/auth/status/success"));
+
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -73,6 +75,7 @@ public class SecurityConfig {
 
         return new ProviderManager(provider);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

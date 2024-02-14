@@ -32,11 +32,6 @@ public class UserEntity implements UserDetails {
     private Set<Role> roles = Set.of(Role.USER);
     @Column(nullable = false)
     private boolean isEnabled = false;
-    @Column(
-            nullable = false,
-            unique = true
-    )
-    private String token = UUID.randomUUID().toString();
     @OneToOne
     @JoinColumn(
             name = "donation_user_data_id",
@@ -127,13 +122,5 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }
