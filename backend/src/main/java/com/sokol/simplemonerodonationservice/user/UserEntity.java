@@ -35,7 +35,8 @@ public class UserEntity implements UserDetails {
     @OneToOne
     @JoinColumn(
             name = "donation_user_data_id",
-            unique = true
+            unique = true,
+            nullable = false
     )
     private DonationUserDataEntity donationUserData;
 

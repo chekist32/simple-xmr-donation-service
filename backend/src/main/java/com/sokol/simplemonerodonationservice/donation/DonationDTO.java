@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 public record DonationDTO(
         String username,
 
-        String amount,
+        double amount,
+
+        String coinType,
 
         String donationText,
 

@@ -1,6 +1,6 @@
 package com.sokol.simplemonerodonationservice.auth.registration;
 
-import com.sokol.simplemonerodonationservice.user.UserEntityModificationRequestEntityType;
+import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.UserEntityModificationRequestEntityType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

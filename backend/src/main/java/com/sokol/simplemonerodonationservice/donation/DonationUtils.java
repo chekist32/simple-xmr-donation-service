@@ -9,7 +9,8 @@ public class DonationUtils {
 
         return new DonationDTO(
                 donationEntity.getSenderUsername().trim(),
-                payment.getAmount() + " XMR",
+                payment.getAmount(),
+                payment.getCoinType().name(),
                 donationEntity.getDonationText().trim(),
                 payment.getConfirmedAt()
         );
@@ -17,7 +18,7 @@ public class DonationUtils {
     public static DonationSettingsDataDTO DonationUserDataToDonationSettingsDataDTOMapper(DonationUserDataEntity donationUserData) {
         return new DonationSettingsDataDTO(
                 donationUserData.getToken(),
-                donationUserData.getConfirmationType(),
+                donationUserData.getConfirmationType().toString(),
                 donationUserData.getTimeout(),
                 donationUserData.getMinDonationAmount()
         );

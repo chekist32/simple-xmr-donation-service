@@ -18,7 +18,6 @@ public class DonationEntity {
     private String senderUsername;
     @Column(length = 300)
     private String donationText;
-    private String moneroSubaddress;
     @Column(nullable = false)
     private LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,7 +26,7 @@ public class DonationEntity {
             name = "user_id"
     )
     private UserEntity user;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             nullable = false,
             name = "payment_id"
@@ -46,18 +45,6 @@ public class DonationEntity {
         this.payment = payment;
     }
 
-    public DonationEntity(String senderUsername,
-                          String donationText,
-                          String moneroSubaddress,
-                          UserEntity user,
-                          PaymentEntity payment) {
-        this.senderUsername = senderUsername;
-        this.donationText = donationText;
-        this.moneroSubaddress = moneroSubaddress;
-        this.user = user;
-        this.payment = payment;
-    }
-
     public UUID getId() {
         return id;
     }
@@ -68,14 +55,6 @@ public class DonationEntity {
 
     public String getDonationText() {
         return donationText;
-    }
-
-    public String getMoneroSubaddress() {
-        return moneroSubaddress;
-    }
-
-    public void setMoneroSubaddress(String moneroSubaddress) {
-        this.moneroSubaddress = moneroSubaddress;
     }
 
     public LocalDateTime getReceivedAt() {

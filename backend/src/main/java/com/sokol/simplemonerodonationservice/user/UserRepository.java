@@ -20,7 +20,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     @Query("FROM UserEntity WHERE email = :principal or username = :principal")
     Optional<UserEntity> findByPrincipal(@Param("principal") String principal);
 
-    Long countByIsEnabledTrue();
-
-    boolean existsByToken(String token);
+    long countByIsEnabledTrue();
 }

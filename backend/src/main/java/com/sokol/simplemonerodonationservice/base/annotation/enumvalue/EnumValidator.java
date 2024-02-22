@@ -1,6 +1,5 @@
-package com.sokol.simplemonerodonationservice.base.annotations.enumvalue;
+package com.sokol.simplemonerodonationservice.base.annotation.enumvalue;
 
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

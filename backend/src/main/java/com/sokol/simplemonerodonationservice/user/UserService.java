@@ -3,33 +3,30 @@ package com.sokol.simplemonerodonationservice.user;
 import com.sokol.simplemonerodonationservice.auth.ChangeEmailRequestDTO;
 import com.sokol.simplemonerodonationservice.auth.ChangePasswordRequestDTO;
 import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenEntity;
-import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenService;
 import com.sokol.simplemonerodonationservice.auth.registration.RegistrationRequestDTO;
 import com.sokol.simplemonerodonationservice.base.exception.DuplicateResourceException;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
+import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.UserEntityModificationRequestService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
     private final DonationUserDataRepository donationUserDataRepository;
+    private final UserEntityModificationRequestService userEntityModificationRequestService;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       ConfirmationTokenService confirmationTokenService,
-                       DonationUserDataRepository donationUserDataRepository) {
+                       DonationUserDataRepository donationUserDataRepository,
+                       UserEntityModificationRequestService userEntityModificationRequestService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.confirmationTokenService = confirmationTokenService;
         this.donationUserDataRepository = donationUserDataRepository;
+        this.userEntityModificationRequestService = userEntityModificationRequestService;
     }
 
     public ConfirmationTokenEntity registerUser(RegistrationRequestDTO registrationDTO) {
@@ -40,7 +37,7 @@ public class UserService {
         if (userRepository.countByIsEnabledTrue() > 0)
             throw new DuplicateResourceException("Admin user is already created");
         else if (userRepository.existsByEmailAndIsEnabledFalse(email))
-            return confirmationTokenService.createRegistrationConfirmationToken(userRepository.findByEmail(email).get());
+            return userEntityModificationRequestService.createRegistrationConfirmationToken(userRepository.findByEmail(email).get()).getConfirmationToken();
         else if (userRepository.existsByUsername(username))
             throw new DuplicateResourceException("User with such username already exists");
         else if (userRepository.existsByEmail(email))
@@ -58,7 +55,7 @@ public class UserService {
         registeredUser.setDonationUserData(donationUserData);
         userRepository.save(registeredUser);
 
-        return confirmationTokenService.createRegistrationConfirmationToken(registeredUser);
+        return userEntityModificationRequestService.createRegistrationConfirmationToken(registeredUser).getConfirmationToken();
     }
 
     public UserDataResponseDTO getUserDataByUsername(String username) {
@@ -79,18 +76,6 @@ public class UserService {
         );
     }
 
-//    public DonationSettingsDataDTO regenerateUserTokenByPrincipal(String principal) {
-//        UserEntity user = userRepository.findByPrincipal(principal)
-//                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
-//
-//        String newUserToken = UUID.randomUUID().toString();
-//        user.setToken(newUserToken);
-//
-//        userRepository.save(user);
-//
-//        return new DonationSettingsDataDTO(newUserToken, );
-//    }
-
     public UserEntity changeUserPassword(String principal, ChangePasswordRequestDTO changePasswordRequestDTO) {
         UserEntity user = userRepository.findByPrincipal(principal)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
@@ -104,46 +89,27 @@ public class UserService {
         UserEntity user = userRepository.findByPrincipal(principal)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
 
-        return confirmationTokenService.createChangeEmailConfirmationToken(user, changeEmailRequestDTO.newEmail());
+        return userEntityModificationRequestService.createChangeEmailModificationRequest(changeEmailRequestDTO.newEmail(), user).getConfirmationToken();
     }
 
     public ConfirmationTokenEntity resetUserPassword(String email) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such email"));
 
-        return confirmationTokenService.createResetPasswordConfirmationToken(user);
-    }
-
-
-    private UserEntity implementUserEntityModificationRequest(UserEntity user, UserEntityModificationRequestEntity request) {
-        switch (request.getUserEntityModificationRequestEntityType()) {
-            case REGISTRATION -> user.setEnabled(request.getSetEnabled());
-            case CHANGE_EMAIL -> user.setEmail(request.getNewEmail());
-            case RESET_PASSWORD -> user.setPassword(request.getNewPassword());
-            default -> throw new RuntimeException("Illegal state (undefined ConfirmationTokenType)");
-        }
-
-        return userRepository.save(user);
+        return userEntityModificationRequestService.createResetPasswordModificationRequest(user).getConfirmationToken();
     }
 
     public UserEntity resetUserPassword(String token, String newPassword) {
-        ConfirmationTokenEntity confirmationToken = confirmationTokenService
-                .confirmResetPasswordConfirmationToken(token, passwordEncoder.encode(newPassword));
-
-        return this.implementUserEntityModificationRequest(confirmationToken.getUser(), confirmationToken.getModificationRequest());
+        return userEntityModificationRequestService.implementUserEntityModificationRequest(
+                userEntityModificationRequestService.updateNewPasswordForResetPasswordModificationRequest(token, newPassword)
+        );
     }
 
     public UserEntity changeEmail(String token) {
-        ConfirmationTokenEntity confirmationToken = confirmationTokenService
-                .confirmEmailByChangeEmailConfirmationToken(token);
-
-        return this.implementUserEntityModificationRequest(confirmationToken.getUser(), confirmationToken.getModificationRequest());
+        return userEntityModificationRequestService.implementUserEntityModificationRequest(token);
     }
 
     public UserEntity activateUser(String token) {
-        ConfirmationTokenEntity confirmationToken = confirmationTokenService
-                .confirmEmailByRegistrationConfirmationToken(token);
-
-        return this.implementUserEntityModificationRequest(confirmationToken.getUser(), confirmationToken.getModificationRequest());
+        return userEntityModificationRequestService.implementUserEntityModificationRequest(token);
     }
 }

@@ -77,7 +77,9 @@ public class DonationService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such username"));
 
-        PaymentEntity payment = paymentService.createPayment();
+        MoneroSubaddressEntity moneroSubaddress = moneroService.getDonationMoneroSubaddress();
+
+        PaymentEntity payment = paymentService.createPayment(moneroSubaddress.getSubaddress(), CoinType.valueOf(donationRequestDTO.coinType()));
 
         DonationEntity createdDonation = new DonationEntity(
                 donationRequestDTO.senderUsername(),
@@ -85,12 +87,9 @@ public class DonationService {
                 user,
                 payment
         );
-
-        MoneroSubaddressEntity moneroSubaddress = moneroService.getDonationMoneroSubaddress();
-        createdDonation.setMoneroSubaddress(moneroSubaddress.getSubaddress());
         donationRepository.save(createdDonation);
 
-        moneroSubaddressScheduledExecutorService.setOccupationTimeout(moneroSubaddress, createdDonation);
+        moneroSubaddressScheduledExecutorService.setOccupationTimeout(moneroSubaddress, payment);
 
         return new DonationResponseDTO(moneroSubaddress.getSubaddress(), payment.getId().toString());
     }
@@ -126,7 +125,7 @@ public class DonationService {
     }
 
     public boolean validateToken(String token) {
-        return userRepository.existsByToken(token);
+        return donationUserDataRepository.existsByToken(token);
     }
 
     public DonationSettingsDataDTO getDonationSettingsDataDTOByPrincipal(String principal) {
@@ -144,6 +143,18 @@ public class DonationService {
 
         DonationUserDataEntity donationUserData = user.getDonationUserData();
         donationUserData.regenerateToken();
+        donationUserDataRepository.save(donationUserData);
+
+        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
+    }
+
+    public DonationSettingsDataDTO updateDonationSettingsData(String principal, DonationSettingsDataDTO donationSettingsDataDTO) {
+        UserEntity user = userRepository.findByPrincipal(principal)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+        donationUserData.setMinDonationAmount(donationSettingsDataDTO.minAmount());
+        donationUserData.setTimeout(donationUserData.getTimeout());
         donationUserDataRepository.save(donationUserData);
 
         return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);

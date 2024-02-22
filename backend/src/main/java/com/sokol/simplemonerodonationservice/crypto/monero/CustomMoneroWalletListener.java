@@ -1,5 +1,6 @@
 package com.sokol.simplemonerodonationservice.crypto.monero;
 
+import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.donation.DonationEntity;
@@ -17,7 +18,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
-@Component
 public class CustomMoneroWalletListener extends MoneroWalletListener {
     private final SseEmitterService sseEmitterService;
     private final MoneroSubaddressScheduledExecutorService moneroSubaddressScheduledExecutorService;
@@ -81,7 +81,7 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
                         String incomingTransferAddress = moneroIncomingTransfer.getAddress();
                         moneroSubaddressScheduledExecutorService.cancelScheduledTask(incomingTransferAddress);
                         moneroSubaddressRepository.updateIsIdleBySubaddress(incomingTransferAddress, true);
-                        sendConfirmedDonationAssociatedWithAddress(
+                        sendConfirmedDonationAssociatedWithMoneroSubaddress(
                                 incomingTransferAddress,
                                 moneroIncomingTransfer.getAmount().doubleValue() / MoneroConfig.pp
                             );
@@ -89,7 +89,7 @@ public class CustomMoneroWalletListener extends MoneroWalletListener {
         }
     }
 
-    public void sendConfirmedDonationAssociatedWithAddress(String moneroAddress, double amount) {
+    public void sendConfirmedDonationAssociatedWithMoneroSubaddress(String moneroAddress, double amount) {
         Optional<DonationEntity> donationEntityOptional = donationRepository.findRelevantDonation(moneroAddress);
 
         if (donationEntityOptional.isPresent()) {

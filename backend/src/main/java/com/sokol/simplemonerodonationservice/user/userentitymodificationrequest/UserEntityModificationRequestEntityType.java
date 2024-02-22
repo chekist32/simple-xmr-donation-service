@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.user;
+package com.sokol.simplemonerodonationservice.user.userentitymodificationrequest;
 
 public enum UserEntityModificationRequestEntityType {
     REGISTRATION,

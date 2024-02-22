@@ -22,30 +22,22 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserDataResponseDTO> retrieveUserData(Principal principal) {
-        UserDataResponseDTO userDataResponseDTO = userService.getUserDataByPrincipal(principal.getName());
-
-        return new ResponseEntity<>(userDataResponseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserDataByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDataResponseDTO> retrieveUserData(@PathVariable String username) {
-        UserDataResponseDTO userDataResponseDTO = userService.getUserDataByUsername(username);
-
-        return new ResponseEntity<>(userDataResponseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserDataByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/profile")
     public ResponseEntity<DonationUserDataDTO> retrieveDonationUserData(Principal principal) {
-        DonationUserDataDTO donationUserDataDTO = donationService.getDonationUserDataByPrincipal(principal.getName());
-
-        return new ResponseEntity<>(donationUserDataDTO, HttpStatus.OK);
+        return new ResponseEntity<>(donationService.getDonationUserDataByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
     @PutMapping("/settings/profile")
     public ResponseEntity<DonationUserDataDTO> editUserDonationData(@RequestBody DonationUserDataDTO donationUserDataDTO, Principal principal) {
-        DonationUserDataDTO body = donationService.modifyDonationUserDataByPrincipal(principal.getName(), donationUserDataDTO);
-
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return new ResponseEntity<>(donationService.modifyDonationUserDataByPrincipal(principal.getName(), donationUserDataDTO), HttpStatus.OK);
     }
 
     @GetMapping("/settings/donation")
@@ -58,6 +50,8 @@ public class UserController {
         return new ResponseEntity<>(donationService.regenerateDonationToken(principal.getName()), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity
+    @PutMapping("/settings/donation")
+    public ResponseEntity<DonationSettingsDataDTO> updateDonationSettingsData(Principal principal, @RequestBody DonationSettingsDataDTO donationSettingsDataDTO) {
+        return new ResponseEntity<>(donationService.updateDonationSettingsData(principal.getName(), donationSettingsDataDTO), HttpStatus.CREATED);
+    }
 }

@@ -13,6 +13,8 @@ public class PaymentEntity {
     @Id
     @GeneratedValue
     private UUID id;
+    @Column(nullable = false)
+    private String cryptoAddress;
     private double amount;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -26,9 +28,12 @@ public class PaymentEntity {
 
     public PaymentEntity() { }
 
-    public PaymentEntity(CoinType coinType) { this.coinType = coinType; }
+    public PaymentEntity(String cryptoAddress, CoinType coinType) {
+        this.cryptoAddress = cryptoAddress;
+        this.coinType = coinType; }
 
-    public PaymentEntity(double amount, CoinType coinType) {
+    public PaymentEntity(String cryptoAddress, double amount, CoinType coinType) {
+        this.cryptoAddress = cryptoAddress;
         this.amount = amount;
         this.coinType = coinType;
     }
@@ -65,5 +70,9 @@ public class PaymentEntity {
 
     public CoinType getCoinType() {
         return coinType;
+    }
+
+    public String getCryptoAddress() {
+        return cryptoAddress;
     }
 }

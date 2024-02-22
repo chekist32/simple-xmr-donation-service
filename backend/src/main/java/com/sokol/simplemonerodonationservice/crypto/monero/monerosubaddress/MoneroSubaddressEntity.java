@@ -5,12 +5,9 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "donation_subaddresses")
+@Table(name = "monero_subaddresses")
 public class MoneroSubaddressEntity {
     @Id
-    @GeneratedValue
-    private Integer id;
-    @Column(nullable = false, unique = true)
     private String subaddress;
     private int index;
     @Column(nullable = false)
@@ -30,10 +27,6 @@ public class MoneroSubaddressEntity {
 
     public String getPrimaryAddress() {
         return primaryAddress;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getSubaddress() {

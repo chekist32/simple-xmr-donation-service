@@ -23,11 +23,11 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public PaymentEntity createPayment(CoinType coinType) {
-        return paymentRepository.save(new PaymentEntity(coinType));
+    public PaymentEntity createPayment(String cryptoAddress, CoinType coinType) {
+        return paymentRepository.save(new PaymentEntity(cryptoAddress, coinType));
     }
-    public PaymentEntity createPayment(double amount, CoinType coinType) {
-        return paymentRepository.save(new PaymentEntity(amount, coinType));
+    public PaymentEntity createPayment(String cryptoAddress, double amount, CoinType coinType) {
+        return paymentRepository.save(new PaymentEntity(cryptoAddress, amount, coinType));
     }
 
     @Async

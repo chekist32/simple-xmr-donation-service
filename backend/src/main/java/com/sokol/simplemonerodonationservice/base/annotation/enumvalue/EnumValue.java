@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.base.annotations.enumvalue;
+package com.sokol.simplemonerodonationservice.base.annotation.enumvalue;
 
 
 import jakarta.validation.Constraint;
@@ -9,7 +9,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.annotation.Documented;
-import java.util.Arrays;
 
 
 @Target(ElementType.FIELD)
