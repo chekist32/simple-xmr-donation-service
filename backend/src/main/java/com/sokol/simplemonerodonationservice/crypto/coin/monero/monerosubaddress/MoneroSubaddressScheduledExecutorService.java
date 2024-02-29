@@ -1,8 +1,5 @@
-package com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
-import com.sokol.simplemonerodonationservice.donation.DonationEntity;
-import com.sokol.simplemonerodonationservice.donation.DonationRepository;
-import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
@@ -40,7 +37,7 @@ public class MoneroSubaddressScheduledExecutorService {
     public void setOccupationTimeout(MoneroSubaddressEntity moneroSubaddress, PaymentEntity paymentEntity, long delay, TimeUnit timeUnit) {
         ScheduledFuture<MoneroSubaddressEntity> newScheduledTask = (ScheduledFuture<MoneroSubaddressEntity>) executorService.schedule(
                 () -> {
-                    moneroSubaddressRepository.updateIsIdleById(moneroSubaddress.getId(), true);
+                    moneroSubaddressRepository.updateIsIdleBySubaddress(moneroSubaddress.getSubaddress(), true);
                     paymentService.expirePayment(paymentEntity);
                     scheduledTasks.remove(moneroSubaddress.getSubaddress());
                 },

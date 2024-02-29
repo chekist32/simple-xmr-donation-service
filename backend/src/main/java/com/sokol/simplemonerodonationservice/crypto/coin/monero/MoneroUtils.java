@@ -1,6 +1,6 @@
-package com.sokol.simplemonerodonationservice.crypto.monero;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressEntity;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressEntity;
 import monero.wallet.model.MoneroSubaddress;
 
 public class MoneroUtils {

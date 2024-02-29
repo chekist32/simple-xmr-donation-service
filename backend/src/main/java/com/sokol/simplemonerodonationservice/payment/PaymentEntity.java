@@ -1,6 +1,6 @@
 package com.sokol.simplemonerodonationservice.payment;
 
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

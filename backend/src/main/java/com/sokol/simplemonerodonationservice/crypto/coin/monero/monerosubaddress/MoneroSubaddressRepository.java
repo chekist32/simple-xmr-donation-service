@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,11 +15,6 @@ public interface MoneroSubaddressRepository extends CrudRepository<MoneroSubaddr
     Optional<MoneroSubaddressEntity> findFirstByPrimaryAddressAndIsIdleTrue(String primaryAddress);
 
     Optional<MoneroSubaddressEntity> findByIndex(int moneroSubaddressIndex);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE MoneroSubaddressEntity SET isIdle = :isIdle WHERE id = :id ")
-    void updateIsIdleById(@Param("id") Integer id, @Param("isIdle") boolean isIdle);
 
     @Modifying
     @Transactional

@@ -1,7 +1,7 @@
 package com.sokol.simplemonerodonationservice.payment;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;

@@ -9,8 +9,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.UUID;
 
 public interface PaymentRepository extends CrudRepository<PaymentEntity, UUID> {
-    @Modifying
-    @Transactional
-    @Query("UPDATE PaymentEntity SET paymentStatus = :paymentStatus WHERE id = :id ")
-    void updatePaymentStatus(@Param("id") UUID id, @Param("paymentStatus") PaymentStatus paymentStatus);
+
 }

@@ -1,14 +1,11 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
-import com.sokol.simplemonerodonationservice.crypto.monero.MoneroService;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressEntity;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
-import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroService;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
@@ -77,9 +74,9 @@ public class DonationService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with such username"));
 
-        MoneroSubaddressEntity moneroSubaddress = moneroService.getDonationMoneroSubaddress();
+        String moneroSubaddress = moneroService.getDonationCryptoAddress();
 
-        PaymentEntity payment = paymentService.createPayment(moneroSubaddress.getSubaddress(), CoinType.valueOf(donationRequestDTO.coinType()));
+//        PaymentEntity payment = paymentService.createPayment(moneroSubaddress, CoinType.valueOf(donationRequestDTO.coinType()));
 
         DonationEntity createdDonation = new DonationEntity(
                 donationRequestDTO.senderUsername(),
@@ -89,9 +86,9 @@ public class DonationService {
         );
         donationRepository.save(createdDonation);
 
-        moneroSubaddressScheduledExecutorService.setOccupationTimeout(moneroSubaddress, payment);
+//        moneroSubaddressScheduledExecutorService.setOccupationTimeout(moneroSubaddress, payment);
 
-        return new DonationResponseDTO(moneroSubaddress.getSubaddress(), payment.getId().toString());
+        return new DonationResponseDTO(moneroSubaddress, payment.getId().toString());
     }
 
     public DonationUserDataDTO getDonationUserDataByUsername(String username) {

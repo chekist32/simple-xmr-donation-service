@@ -1,20 +1,16 @@
-package com.sokol.simplemonerodonationservice.crypto.monero;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
 import com.sokol.simplemonerodonationservice.donation.DonationRepository;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressRepository;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressRepository;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
-import com.sokol.simplemonerodonationservice.user.UserRepository;
 import monero.wallet.MoneroWalletRpc;
-import monero.wallet.model.MoneroWalletListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 public class MoneroConfig {

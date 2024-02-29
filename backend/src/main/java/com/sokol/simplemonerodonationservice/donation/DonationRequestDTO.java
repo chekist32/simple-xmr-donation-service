@@ -1,7 +1,7 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.annotation.enumvalue.EnumValue;
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

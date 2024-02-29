@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import jakarta.persistence.*;
 

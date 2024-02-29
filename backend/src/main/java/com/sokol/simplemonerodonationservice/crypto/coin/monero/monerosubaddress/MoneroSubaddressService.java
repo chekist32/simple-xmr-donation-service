@@ -1,7 +1,7 @@
-package com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.crypto.monero.MoneroUtils;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroUtils;
 import jakarta.annotation.PostConstruct;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
@@ -60,7 +60,7 @@ public class MoneroSubaddressService {
                 moneroSubaddressRepository.findFirstByPrimaryAddressAndIsIdleTrue(account.getPrimaryAddress())
                         .orElseGet(() -> createDonationMoneroSubaddress(account.getIndex()));
 
-        moneroSubaddressRepository.updateIsIdleById(IdleDonationMoneroSubaddress.getId(), false);
+        moneroSubaddressRepository.updateIsIdleBySubaddress(IdleDonationMoneroSubaddress.getSubaddress(), false);
 
         return IdleDonationMoneroSubaddress;
     }

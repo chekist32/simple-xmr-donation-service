@@ -1,18 +1,16 @@
-package com.sokol.simplemonerodonationservice.crypto.monero;
+package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
-import com.sokol.simplemonerodonationservice.crypto.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.donation.DonationEntity;
 import com.sokol.simplemonerodonationservice.donation.DonationRepository;
 import com.sokol.simplemonerodonationservice.donation.DonationUtils;
-import com.sokol.simplemonerodonationservice.crypto.monero.monerosubaddress.MoneroSubaddressRepository;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressRepository;
 import com.sokol.simplemonerodonationservice.payment.PaymentService;
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
 import monero.wallet.model.MoneroOutputWallet;
 import monero.wallet.model.MoneroTxWallet;
 import monero.wallet.model.MoneroWalletListener;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
