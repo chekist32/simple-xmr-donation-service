@@ -3,6 +3,7 @@ package com.sokol.simplemonerodonationservice.user;
 import com.sokol.simplemonerodonationservice.donation.DonationService;
 import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/settings/profile")
-    public ResponseEntity<DonationUserDataDTO> editUserDonationData(@RequestBody DonationUserDataDTO donationUserDataDTO, Principal principal) {
+    public ResponseEntity<DonationUserDataDTO> editUserDonationData(@RequestBody @Valid DonationUserDataDTO donationUserDataDTO, Principal principal) {
         return new ResponseEntity<>(donationService.modifyDonationUserDataByPrincipal(principal.getName(), donationUserDataDTO), HttpStatus.OK);
     }
 

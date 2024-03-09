@@ -38,7 +38,7 @@ function DonationUserPageView() {
         import.meta.env.VITE_API_BASE_URL +
           "/api/donation/donate/" +
           donationUserData.username,
-        { senderUsername: username, donationText: donationText },
+        { senderUsername: username, donationText: donationText, coinType: "XMR" /*TODO*/ },
       );
       setPaymentData(res.data);
       setShowInvoice(true);

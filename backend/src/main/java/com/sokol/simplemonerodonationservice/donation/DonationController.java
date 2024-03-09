@@ -2,10 +2,13 @@ package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -60,7 +63,7 @@ public class DonationController {
     @PostMapping("/donate/{username}")
     public ResponseEntity<DonationResponseDTO> fetchMoneroSubbadressByUsername(
             @PathVariable String username,
-            @RequestBody DonationRequestDTO donationRequestDTO
+            @RequestBody @Valid DonationRequestDTO donationRequestDTO
     ) {
         DonationResponseDTO body = donationService.implementDonationRequest(donationRequestDTO, username);
         return new ResponseEntity<>(body, HttpStatus.OK);

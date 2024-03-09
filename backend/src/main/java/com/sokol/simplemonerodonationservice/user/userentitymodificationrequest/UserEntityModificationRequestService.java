@@ -4,7 +4,9 @@ import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationToken
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserEntityModificationRequestService {
     private final UserEntityModificationRequestEntityRepository userEntityModificationRequestEntityRepository;
     private final UserRepository userRepository;
@@ -50,20 +52,17 @@ public class UserEntityModificationRequestService {
         return this.createSetEnabledModificationRequest(true, user);
     }
 
-    public UserEntityModificationRequestEntity updateNewPasswordForResetPasswordModificationRequest(String token, String newPassword) {
-        UserEntityModificationRequestEntity userEntityModificationRequest =
-                userEntityModificationRequestEntityRepository.findByConfirmationToken(token)
-                        .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+    private UserEntityModificationRequestEntity findUserEntityModificationRequestEntityByToken(String token) {
+        return userEntityModificationRequestEntityRepository.findByConfirmationToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+    }
 
-        return userEntityModificationRequest.setNewPassword(newPassword);
+    public UserEntityModificationRequestEntity updateNewPasswordForResetPasswordModificationRequest(String token, String newPassword) {
+        return findUserEntityModificationRequestEntityByToken(token).setNewPassword(newPassword);
     }
 
     public UserEntity implementUserEntityModificationRequest(String token) {
-        UserEntityModificationRequestEntity userEntityModificationRequest =
-                userEntityModificationRequestEntityRepository.findByConfirmationToken(token)
-                        .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
-
-        return this.implementUserEntityModificationRequest(userEntityModificationRequest);
+        return this.implementUserEntityModificationRequest(findUserEntityModificationRequestEntityByToken(token));
     }
 
     public UserEntity implementUserEntityModificationRequest(UserEntityModificationRequestEntity request) {

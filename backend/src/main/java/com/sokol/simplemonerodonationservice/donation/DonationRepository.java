@@ -17,21 +17,29 @@ public interface DonationRepository extends CrudRepository<DonationEntity, UUID>
     @Query("""
             SELECT d FROM DonationEntity d
             WHERE d.payment.cryptoAddress = :cryptoAddress
-                  AND d.payment.paymentStatus = CONFIRMED
-            ORDER BY d.payment.receivedAt DESC LIMIT 1
+                  AND d.payment.paymentStatus = 'PENDING'
+            ORDER BY d.payment.createdAt DESC LIMIT 1
             """)
     Optional<DonationEntity> findRelevantDonation(@Param("cryptoAddress") String cryptoAddress);
 
     @Query("""
             SELECT d FROM DonationEntity d
-            WHERE d.payment.cryptoAddress = :cryptoAddress
-                  AND d.payment.paymentStatus = CONFIRMED
-            ORDER BY d.payment.receivedAt DESC LIMIT 1
+            JOIN FETCH d.payment p
+            WHERE d.user = :user AND p.paymentStatus = 'CONFIRMED'
             """)
-    @EntityGraph(attributePaths = )
-    List<DonationEntity> findByUserAndConfirmedAtNotNull(UserEntity user);
+    List<DonationEntity> findByUser(@Param("user") UserEntity user);
 
-    List<DonationEntity> findByUserAndConfirmedAtNotNull(UserEntity user, Pageable pageable);
+    @Query("""
+            SELECT d FROM DonationEntity d
+            JOIN FETCH d.payment p
+            WHERE d.user = :user AND p.paymentStatus = 'CONFIRMED'
+            """)
+    List<DonationEntity> findByUser(@Param("user") UserEntity user, Pageable pageable);
 
-    long countByUserAndConfirmedAtNotNull(UserEntity user);
+    @Query("""
+            SELECT COUNT(*) FROM DonationEntity
+            WHERE user = :user
+                  AND payment.paymentStatus = 'CONFIRMED'
+            """)
+    long countByUser(@Param("user") UserEntity user);
 }

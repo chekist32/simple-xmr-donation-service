@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.payment;
+package com.sokol.simplemonerodonationservice.crypto.payment;
 
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import jakarta.persistence.*;
@@ -15,6 +15,7 @@ public class PaymentEntity {
     private UUID id;
     @Column(nullable = false)
     private String cryptoAddress;
+    private double requiredAmount;
     private double amount;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -25,17 +26,23 @@ public class PaymentEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CoinType coinType;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentPurposeType paymentPurpose;
 
     public PaymentEntity() { }
 
-    public PaymentEntity(String cryptoAddress, CoinType coinType) {
+    public PaymentEntity(String cryptoAddress, CoinType coinType, PaymentPurposeType paymentPurpose) {
         this.cryptoAddress = cryptoAddress;
-        this.coinType = coinType; }
-
-    public PaymentEntity(String cryptoAddress, double amount, CoinType coinType) {
-        this.cryptoAddress = cryptoAddress;
-        this.amount = amount;
         this.coinType = coinType;
+        this.paymentPurpose = paymentPurpose;
+    }
+
+    public PaymentEntity(String cryptoAddress, double requiredAmount, CoinType coinType, PaymentPurposeType paymentPurpose) {
+        this.cryptoAddress = cryptoAddress;
+        this.requiredAmount = requiredAmount;
+        this.coinType = coinType;
+        this.paymentPurpose = paymentPurpose;
     }
 
     public UUID getId() {
@@ -74,5 +81,21 @@ public class PaymentEntity {
 
     public String getCryptoAddress() {
         return cryptoAddress;
+    }
+
+    public double getRequiredAmount() {
+        return requiredAmount;
+    }
+
+    public void setRequiredAmount(double requiredAmount) {
+        this.requiredAmount = requiredAmount;
+    }
+
+    public PaymentPurposeType getPaymentPurpose() {
+        return paymentPurpose;
+    }
+
+    public void setPaymentPurpose(PaymentPurposeType paymentPurpose) {
+        this.paymentPurpose = paymentPurpose;
     }
 }

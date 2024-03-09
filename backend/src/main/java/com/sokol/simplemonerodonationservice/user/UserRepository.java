@@ -17,7 +17,11 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 
     boolean existsByEmailAndIsEnabledFalse(String email);
 
-    @Query("FROM UserEntity WHERE email = :principal or username = :principal")
+    @Query("""
+            SELECT u FROM UserEntity u
+            WHERE u.email = :principal
+                  OR u.username = :principal
+            """)
     Optional<UserEntity> findByPrincipal(@Param("principal") String principal);
 
     long countByIsEnabledTrue();

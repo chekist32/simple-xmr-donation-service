@@ -1,7 +1,7 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
-import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
 
 public class DonationUtils {
     public static DonationDTO DonationEntityToDonationDTOMapper(DonationEntity donationEntity) {

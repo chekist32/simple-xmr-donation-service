@@ -1,11 +1,16 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroUtils;
+import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.ExpiredPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEvent;
 import jakarta.annotation.PostConstruct;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
 import monero.wallet.model.MoneroSubaddress;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -93,5 +98,14 @@ public class MoneroSubaddressService {
                 );
 
         return moneroSubaddressRepository.save(createdMoneroSubaddressEntity);
+    }
+
+    @EventListener(classes = {ConfirmedPaymentEvent.class, ExpiredPaymentEvent.class})
+    private void handlePaymentEvent(PaymentEvent paymentEvent) {
+        if (paymentEvent.getPayment().getCoinType() == CoinType.XMR)
+            moneroSubaddressRepository.updateIsIdleBySubaddress(
+                paymentEvent.getPayment().getCryptoAddress(),
+                false
+            );
     }
 }

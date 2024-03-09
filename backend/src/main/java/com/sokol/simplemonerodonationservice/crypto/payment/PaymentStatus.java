@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.payment;
+package com.sokol.simplemonerodonationservice.crypto.payment;
 
 public enum PaymentStatus {
     PENDING,

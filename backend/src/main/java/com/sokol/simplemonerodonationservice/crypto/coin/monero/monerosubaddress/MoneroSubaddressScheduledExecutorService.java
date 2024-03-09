@@ -1,8 +1,8 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
-import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
-import com.sokol.simplemonerodonationservice.payment.PaymentService;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,28 +17,24 @@ public class MoneroSubaddressScheduledExecutorService {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private Map<String, ScheduledFuture<MoneroSubaddressEntity>> scheduledTasks = new HashMap<>();
     private final MoneroSubaddressRepository moneroSubaddressRepository;
-    private final PaymentService paymentService;
     private int timeout;
 
     public MoneroSubaddressScheduledExecutorService(MoneroSubaddressRepository moneroSubaddressRepository,
-                                                    DonationUserDataRepository donationUserDataRepository,
-                                                    PaymentService paymentService) {
+                                                    DonationUserDataRepository donationUserDataRepository) {
         this.moneroSubaddressRepository = moneroSubaddressRepository;
-        this.paymentService = paymentService;
         if (donationUserDataRepository.count() > 0)
             this.updateTimeout(donationUserDataRepository.findAll().iterator().next().getTimeout());
         else this.updateTimeout(40 * 60);
 
     }
 
-    public void setOccupationTimeout(MoneroSubaddressEntity moneroSubaddress, PaymentEntity paymentEntity) {
-        this.setOccupationTimeout(moneroSubaddress, paymentEntity, timeout, TimeUnit.SECONDS);
+    public void setOccupationTimeout(MoneroSubaddressEntity moneroSubaddress) {
+        this.setOccupationTimeout(moneroSubaddress, timeout, TimeUnit.SECONDS);
     }
-    public void setOccupationTimeout(MoneroSubaddressEntity moneroSubaddress, PaymentEntity paymentEntity, long delay, TimeUnit timeUnit) {
+    public void setOccupationTimeout(MoneroSubaddressEntity moneroSubaddress, long delay, TimeUnit timeUnit) {
         ScheduledFuture<MoneroSubaddressEntity> newScheduledTask = (ScheduledFuture<MoneroSubaddressEntity>) executorService.schedule(
                 () -> {
                     moneroSubaddressRepository.updateIsIdleBySubaddress(moneroSubaddress.getSubaddress(), true);
-                    paymentService.expirePayment(paymentEntity);
                     scheduledTasks.remove(moneroSubaddress.getSubaddress());
                 },
                 delay,

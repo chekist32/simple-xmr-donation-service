@@ -17,73 +17,16 @@ public class ConfirmationTokenService {
     }
 
     public ConfirmationTokenEntity createConfirmationToken(UserEntity user) {
-//        confirmationTokenRepository.deactivateAllTokensByUserIdAndUserEntityModificationRequestEntityType(
-//                user.getId(),
-//                userEntityModificationRequestEntity.getUserEntityModificationRequestEntityType()
-//        );
-
         return confirmationTokenRepository.save(new ConfirmationTokenEntity(user));
     }
 
-//    public ConfirmationTokenEntity createRegistrationConfirmationToken(UserEntity user) {
-//        UserEntityModificationRequestEntity request = new UserEntityModificationRequestEntity(UserEntityModificationRequestEntityType.REGISTRATION);
-//        request.setSetEnabled(true);
-//        userEntityModificationRequestEntityRepository.save(request);
-//        return this.createConfirmationToken(user, ConfirmationTokenType.USER_ENTITY, request);
-//    }
-//
-//    public ConfirmationTokenEntity createChangeEmailConfirmationToken(UserEntity user, String newEmail) {
-//        UserEntityModificationRequestEntity request = new UserEntityModificationRequestEntity(UserEntityModificationRequestEntityType.CHANGE_EMAIL);
-//        request.setNewEmail(newEmail);
-//        userEntityModificationRequestEntityRepository.save(request);
-//        return this.createConfirmationToken(user, ConfirmationTokenType.USER_ENTITY, request);
-//    }
-//
-//    public ConfirmationTokenEntity createResetPasswordConfirmationToken(UserEntity user) {
-//        UserEntityModificationRequestEntity request = new UserEntityModificationRequestEntity(UserEntityModificationRequestEntityType.RESET_PASSWORD);
-//        userEntityModificationRequestEntityRepository.save(request);
-//        return this.createConfirmationToken(user, ConfirmationTokenType.USER_ENTITY, request);
-//    }
-
-//    public ConfirmationTokenEntity confirmResetPasswordConfirmationToken(String token, String newPassword) {
-//        ConfirmationTokenEntity confirmationToken = confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
-//                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
-//
-//        confirmationTokenChecks(confirmationToken);
-//
-//        UserEntityModificationRequestEntity request = confirmationToken.getModificationRequest();
-//        request.setNewPassword(newPassword);
-//        userEntityModificationRequestEntityRepository.save(request);
-//
-//        confirmationToken.implementToken();
-//        return confirmationTokenRepository.save(confirmationToken);
-//    }
-//
-//    public ConfirmationTokenEntity confirmEmailByRegistrationConfirmationToken(String token) {
-//        ConfirmationTokenEntity confirmationToken = confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
-//                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
-//
-//        confirmationTokenChecks(confirmationToken);
-//
-//        confirmationToken.implementToken();
-//        return confirmationTokenRepository.save(confirmationToken);
-//    }
-//
-//    public ConfirmationTokenEntity confirmEmailByChangeEmailConfirmationToken(String token) {
-//        ConfirmationTokenEntity confirmationToken = confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
-//                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
-//
-//        confirmationTokenChecks(confirmationToken);
-//
-//        confirmationToken.implementToken();
-//        return confirmationTokenRepository.save(confirmationToken);
-//    }
+    public ConfirmationTokenEntity findConfirmationToken(String token) {
+        return confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+    }
 
     public ConfirmationTokenEntity confirmToken(String token) {
-        ConfirmationTokenEntity confirmationToken = confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
-
-        return this.confirmToken(confirmationToken);
+        return this.confirmToken(findConfirmationToken(token));
     }
 
     public ConfirmationTokenEntity confirmToken(ConfirmationTokenEntity confirmationToken) {

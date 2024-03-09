@@ -4,6 +4,7 @@ import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationToken
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +25,7 @@ public class UserEntityModificationRequestEntity {
             nullable = false
     )
     private ConfirmationTokenEntity confirmationToken;
-    @OneToMany
+    @OneToOne
     @JoinColumn(
             name = "user_id",
             nullable = false
