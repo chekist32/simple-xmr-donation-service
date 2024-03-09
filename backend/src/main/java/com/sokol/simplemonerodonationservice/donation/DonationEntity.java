@@ -20,13 +20,13 @@ public class DonationEntity {
     private String donationText;
     @Column(nullable = false)
     private LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(
             nullable = false,
             name = "user_id"
     )
     private UserEntity user;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(
             nullable = false,
             name = "payment_id"

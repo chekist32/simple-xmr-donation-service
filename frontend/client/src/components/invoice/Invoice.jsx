@@ -128,7 +128,7 @@ function Invoice({ paymentData, timeout, closeHandler }) {
           </div>
           <div className={styles.subaddress}>
             <label htmlFor="">Address</label>
-            <ReadonlyField value={paymentData.subaddress} />
+            <ReadonlyField value={paymentData.cryptoAddress} />
           </div>
           <div className={styles.qr_code_container}>
             <QRCode
@@ -138,7 +138,7 @@ function Invoice({ paymentData, timeout, closeHandler }) {
                 maxHeight: "256px",
                 height: "80%",
               }}
-              value={paymentData.subaddress}
+              value={paymentData.cryptoAddress}
             />
           </div>
           <div className={styles.paymentId}>
@@ -164,7 +164,7 @@ Invoice.propTypes = {
   paymentData: PropTypes.shape({
     paymentId: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
     minAmount: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-    subaddress: PropTypes.string
+    cryptoAddress: PropTypes.string
   })
 }
 

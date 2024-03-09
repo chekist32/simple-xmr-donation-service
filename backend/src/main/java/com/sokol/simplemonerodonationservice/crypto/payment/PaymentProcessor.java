@@ -69,7 +69,7 @@ public class PaymentProcessor {
     }
 
     private boolean checkRequirements(PaymentEntity payment, CryptoTransfer cryptoTransfer) {
-        return cryptoTransfer.amount() >= payment.getAmount();
+        return cryptoTransfer.amount() >= payment.getRequiredAmount();
     }
 
     @EventListener(classes = IncomingCryptoTransactionEvent.class)

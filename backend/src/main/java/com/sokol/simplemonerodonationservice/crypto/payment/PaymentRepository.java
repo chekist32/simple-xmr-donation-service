@@ -11,7 +11,8 @@ public interface PaymentRepository extends CrudRepository<PaymentEntity, UUID> {
     @Query("""
            SELECT p FROM PaymentEntity p
            WHERE p.cryptoAddress = :cryptoAddress
-                 AND p.paymentStatus = CONFIRMED
+                 AND p.paymentStatus = PENDING
+           ORDER BY p.createdAt DESC LIMIT 1
            """)
     Optional<PaymentEntity> findPendingPaymentByCryptoAddress(@Param("cryptoAddress") String cryptoAddress);
 }

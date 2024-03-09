@@ -29,7 +29,7 @@ public final class MoneroUtils {
                 incomingTransfer.getAddress(),
                 from,
                 incomingTransfer.getAmount().doubleValue() / MoneroConfig.pp,
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(incomingTransfer.getTx().getReceivedTimestamp()), ZoneOffset.UTC),
+                LocalDateTime.now(ZoneOffset.UTC),
                 CoinType.XMR,
                 incomingTransfer.isIncoming(),
                 incomingTransfer.isOutgoing()

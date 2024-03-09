@@ -25,7 +25,7 @@ public class DonationUserDataEntity {
     @Column(nullable = false)
     private int timeout;
 
-    public DonationUserDataEntity() { this("Default greeting text", 0.1, CryptoConfirmationType.UNCONFIRMED, 40 * 60); }
+    public DonationUserDataEntity() { this("Default greeting text", 0.1, CryptoConfirmationType.UNCONFIRMED, 40 * 60 * 1000); }
 
     public DonationUserDataEntity(String greetingText, double minDonationAmount, CryptoConfirmationType confirmationType, int timeout) {
         this.greetingText = greetingText;

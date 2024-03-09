@@ -1,5 +1,6 @@
 package com.sokol.simplemonerodonationservice.donation;
 
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface DonationRepository extends CrudRepository<DonationEntity, UUID> {
-    @Query("""
-            SELECT d FROM DonationEntity d
-            WHERE d.payment.cryptoAddress = :cryptoAddress
-                  AND d.payment.paymentStatus = 'PENDING'
-            ORDER BY d.payment.createdAt DESC LIMIT 1
-            """)
-    Optional<DonationEntity> findRelevantDonation(@Param("cryptoAddress") String cryptoAddress);
+    Optional<DonationEntity> findDonationByPayment(PaymentEntity payment);
 
     @Query("""
             SELECT d FROM DonationEntity d

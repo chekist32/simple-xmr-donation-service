@@ -7,14 +7,18 @@ import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationU
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroService;
+import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
+import com.sokol.simplemonerodonationservice.sse.SseServiceConfig;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonationService {
@@ -142,5 +146,16 @@ public class DonationService {
         donationUserDataRepository.save(donationUserData);
 
         return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
+    }
+
+    @EventListener(classes = ConfirmedPaymentEvent.class)
+    private void handleConfirmedPaymentEvent(ConfirmedPaymentEvent confirmedPaymentEvent) {
+        PaymentEntity payment = confirmedPaymentEvent.getPayment();
+        if (payment.getPaymentPurpose() == PaymentPurposeType.DONATION)
+            donationRepository
+                    .findDonationByPayment(payment)
+                    .ifPresent(
+                            donationEntity -> SseEmitterService.sendDonationMessageToAllClients(DonationUtils.DonationEntityToDonationDTOMapper(donationEntity))
+                    );
     }
 }
