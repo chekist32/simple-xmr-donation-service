@@ -4,6 +4,7 @@ import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundExce
 import com.sokol.simplemonerodonationservice.crypto.CryptoTransfer;
 import com.sokol.simplemonerodonationservice.crypto.IncomingCryptoTransactionEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
+import com.sokol.simplemonerodonationservice.currencyconverter.CryptoCurrencyConverter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,12 @@ public class PaymentProcessor {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public PaymentEntity generateCryptoPayment(CoinType coinType, PaymentPurposeType paymentPurpose, long timeout) {
-        PaymentEntity payment = paymentService.generateCryptoPayment(coinType, paymentPurpose);
-
-        processPayment(payment, timeout);
-
-        return payment;
-    }
-
     public PaymentEntity generateCryptoPayment(CoinType coinType, PaymentPurposeType paymentPurpose, double requiredAmount, long timeout) {
-        PaymentEntity payment = paymentService.generateCryptoPayment(coinType, paymentPurpose, requiredAmount);
+        PaymentEntity payment = paymentService.generateCryptoPayment(
+                coinType,
+                paymentPurpose,
+                CryptoCurrencyConverter.convertUsdToCrypto(requiredAmount, coinType)
+        );
 
         processPayment(payment, timeout);
 
@@ -64,8 +61,10 @@ public class PaymentProcessor {
     }
 
     private void removeScheduleTask(UUID paymentId) {
-        if (pendingPayments.contains(paymentId))
+        if (pendingPayments.containsKey(paymentId)) {
+            pendingPayments.get(paymentId).cancel(true);
             pendingPayments.remove(paymentId);
+        }
     }
 
     private boolean checkRequirements(PaymentEntity payment, CryptoTransfer cryptoTransfer) {
@@ -73,7 +72,7 @@ public class PaymentProcessor {
     }
 
     @EventListener(classes = IncomingCryptoTransactionEvent.class)
-    private void handleIncomingCryptoTransactionEvent(IncomingCryptoTransactionEvent incomingCryptoTransactionEvent) {
+    protected void handleIncomingCryptoTransactionEvent(IncomingCryptoTransactionEvent incomingCryptoTransactionEvent) {
         try {
             CryptoTransfer cryptoTransfer = incomingCryptoTransactionEvent.getCryptoTransfer();
             PaymentEntity payment = paymentService.confirmPaymentByCryptoAddress(

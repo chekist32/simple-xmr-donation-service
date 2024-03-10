@@ -14,10 +14,7 @@ public interface MoneroSubaddressRepository extends CrudRepository<MoneroSubaddr
 
     Optional<MoneroSubaddressEntity> findFirstByPrimaryAddressAndIsIdleTrue(String primaryAddress);
 
-    Optional<MoneroSubaddressEntity> findByIndex(int moneroSubaddressIndex);
-
     @Modifying
-    @Transactional
-    @Query("UPDATE MoneroSubaddressEntity SET isIdle = :isIdle WHERE subaddress = :subaddress ")
+    @Query("UPDATE MoneroSubaddressEntity SET isIdle = :isIdle WHERE subaddress = :subaddress")
     void updateIsIdleBySubaddress(@Param("subaddress") String subaddress, @Param("isIdle") boolean isIdle);
 }

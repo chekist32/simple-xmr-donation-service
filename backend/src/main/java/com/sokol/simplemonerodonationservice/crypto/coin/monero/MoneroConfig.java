@@ -1,16 +1,7 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
-import com.sokol.simplemonerodonationservice.crypto.payment.PaymentServiceImpl;
-import com.sokol.simplemonerodonationservice.donation.DonationRepository;
-import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressRepository;
-import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
-import com.sokol.simplemonerodonationservice.crypto.payment.PaymentService;
-import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
-import monero.daemon.MoneroDaemonRpc;
-import monero.daemon.model.MoneroNetworkType;
-import monero.wallet.MoneroWalletFull;
 import monero.wallet.MoneroWalletRpc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;

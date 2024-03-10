@@ -32,13 +32,18 @@ public class PaymentEntity {
 
     public PaymentEntity() { }
 
-    public PaymentEntity(String cryptoAddress, CoinType coinType, PaymentPurposeType paymentPurpose) {
+    public PaymentEntity(String cryptoAddress,
+                         CoinType coinType,
+                         PaymentPurposeType paymentPurpose) {
         this.cryptoAddress = cryptoAddress;
         this.coinType = coinType;
         this.paymentPurpose = paymentPurpose;
     }
 
-    public PaymentEntity(String cryptoAddress, double requiredAmount, CoinType coinType, PaymentPurposeType paymentPurpose) {
+    public PaymentEntity(String cryptoAddress,
+                         double requiredAmount,
+                         CoinType coinType,
+                         PaymentPurposeType paymentPurpose) {
         this.cryptoAddress = cryptoAddress;
         this.requiredAmount = requiredAmount;
         this.coinType = coinType;

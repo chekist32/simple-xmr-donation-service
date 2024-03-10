@@ -11,6 +11,7 @@ import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
 import com.sokol.simplemonerodonationservice.sse.SseServiceConfig;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -85,7 +86,12 @@ public class DonationService {
                 payment
         ));
 
-        return new DonationResponseDTO(payment.getCryptoAddress(), payment.getId().toString());
+        return new DonationResponseDTO(
+                payment.getCryptoAddress(),
+                payment.getRequiredAmount(),
+                donationUserData.getTimeout(),
+                payment.getId().toString()
+        );
     }
 
     public DonationUserDataDTO getDonationUserDataByUsername(String username) {
@@ -149,7 +155,7 @@ public class DonationService {
     }
 
     @EventListener(classes = ConfirmedPaymentEvent.class)
-    private void handleConfirmedPaymentEvent(ConfirmedPaymentEvent confirmedPaymentEvent) {
+    protected void handleConfirmedPaymentEvent(ConfirmedPaymentEvent confirmedPaymentEvent) {
         PaymentEntity payment = confirmedPaymentEvent.getPayment();
         if (payment.getPaymentPurpose() == PaymentPurposeType.DONATION)
             donationRepository

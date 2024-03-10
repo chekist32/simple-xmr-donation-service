@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "confirmation_tokens")
 public class ConfirmationTokenEntity {
-    private final long EXPIRATION_TIME = 24;
+    private final static long EXPIRATION_TIME = 24;
     @Id
     private String token = UUID.randomUUID().toString();
     @Column(nullable = false)

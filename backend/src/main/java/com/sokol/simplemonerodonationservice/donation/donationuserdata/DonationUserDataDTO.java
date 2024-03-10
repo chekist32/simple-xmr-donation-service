@@ -10,4 +10,6 @@ public record DonationUserDataDTO(
 
         @Size(max = 225, message = "Max size is 225 characters")
         String greetingText
+
+
 ) { }

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpError {
+    private HttpError() { }
+
     public static Map<String, Object> createInvalidArgumentErrorResponseBody(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, Object> body = createDefaultErrorResponseBody(ex, request, HttpStatus.BAD_REQUEST);
         Map<String, String> message = new HashMap<>();

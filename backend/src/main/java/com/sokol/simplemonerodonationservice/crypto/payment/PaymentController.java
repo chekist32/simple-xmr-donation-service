@@ -16,8 +16,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
-    private final PaymentService paymentService;
     private final static HashMap<UUID, DeferredResult<ResponseEntity<Object>>> pendingDeferredResults = new HashMap<>();
+    private final PaymentService paymentService;
 
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
@@ -29,7 +29,7 @@ public class PaymentController {
         if (pendingDeferredResults.containsKey(paymentIdUUID)) return pendingDeferredResults.get(paymentIdUUID);
 
         PaymentEntity payment = paymentService.findPaymentById(paymentIdUUID);
-        DeferredResult<ResponseEntity<Object>> result = new DeferredResult<>(50*60*60*1000L);
+        DeferredResult<ResponseEntity<Object>> result = new DeferredResult<>(Long.MAX_VALUE);
 
         switch (payment.getPaymentStatus()) {
             case PENDING -> pendingDeferredResults.put(paymentIdUUID, result);
@@ -41,7 +41,7 @@ public class PaymentController {
     }
 
     @EventListener(classes = ExpiredPaymentEvent.class)
-    private void handleExpiredPaymentEvent(ExpiredPaymentEvent paymentEvent) {
+    protected void handleExpiredPaymentEvent(ExpiredPaymentEvent paymentEvent) {
         PaymentEntity payment = paymentEvent.getPayment();
         if (pendingDeferredResults.containsKey(payment.getId()))
             pendingDeferredResults
@@ -50,7 +50,7 @@ public class PaymentController {
     }
 
     @EventListener(classes = ConfirmedPaymentEvent.class)
-    private void handleConfirmedPaymentEvent(ConfirmedPaymentEvent paymentEvent) {
+    protected void handleConfirmedPaymentEvent(ConfirmedPaymentEvent paymentEvent) {
         PaymentEntity payment = paymentEvent.getPayment();
         if (pendingDeferredResults.containsKey(payment.getId()))
             pendingDeferredResults

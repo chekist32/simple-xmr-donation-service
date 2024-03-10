@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/settings/donation")
-    public ResponseEntity<DonationSettingsDataDTO> updateDonationSettingsData(Principal principal, @RequestBody DonationSettingsDataDTO donationSettingsDataDTO) {
+    public ResponseEntity<DonationSettingsDataDTO> updateDonationSettingsData(Principal principal, @Valid @RequestBody DonationSettingsDataDTO donationSettingsDataDTO) {
         return new ResponseEntity<>(donationService.updateDonationSettingsData(principal.getName(), donationSettingsDataDTO), HttpStatus.CREATED);
     }
 }

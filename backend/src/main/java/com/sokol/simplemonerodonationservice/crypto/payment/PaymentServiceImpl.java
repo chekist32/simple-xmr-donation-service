@@ -29,23 +29,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.coinServiceFactory = coinServiceFactory;
     }
 
-//    public void getResponseWhenPaymentIsConfirmed(DeferredResult<ResponseEntity<Object>> result, String paymentId) {
-//        UUID paymentUUID = UUID.fromString(paymentId);
-//        Optional<PaymentEntity> payment = paymentRepository.findById(paymentUUID);
-//
-//        if (payment.isEmpty()) {
-//            result.setErrorResult("There is no payment associated with such paymentId");
-//            return;
-//        }
-//
-//        PaymentEntity paymentEntity = payment.get();
-//        switch (paymentEntity.getPaymentStatus()) {
-//            case PENDING -> pendingPayments.put(paymentUUID, result);
-//            case CONFIRMED -> result.setResult(new ResponseEntity<>("Payment has been confirmed", HttpStatus.OK));
-//            case EXPIRED -> result.setResult(new ResponseEntity<>("Payment has been expired", HttpStatus.REQUEST_TIMEOUT));
-//        }
-//    }
-
     public PaymentEntity expirePayment(PaymentEntity payment) {
         if (payment.getPaymentStatus() != PaymentStatus.PENDING) return payment;
 

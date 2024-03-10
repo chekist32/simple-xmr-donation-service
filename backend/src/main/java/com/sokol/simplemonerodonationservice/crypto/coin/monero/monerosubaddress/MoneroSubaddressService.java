@@ -7,6 +7,7 @@ import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEven
 import com.sokol.simplemonerodonationservice.crypto.payment.ExpiredPaymentEvent;
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEvent;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
 import monero.wallet.model.MoneroSubaddress;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MoneroSubaddressService {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
     private final MoneroWalletRpc wallet;
@@ -60,6 +62,7 @@ public class MoneroSubaddressService {
         return this.getIdleDonationMoneroSubaddress(moneroAccount);
     }
 
+    @Transactional
     public MoneroSubaddressEntity getIdleDonationMoneroSubaddress(MoneroAccount account) {
         MoneroSubaddressEntity IdleDonationMoneroSubaddress =
                 moneroSubaddressRepository.findFirstByPrimaryAddressAndIsIdleTrue(account.getPrimaryAddress())
@@ -101,11 +104,12 @@ public class MoneroSubaddressService {
     }
 
     @EventListener(classes = {ConfirmedPaymentEvent.class, ExpiredPaymentEvent.class})
-    private void handlePaymentEvent(PaymentEvent paymentEvent) {
+    @Transactional
+    protected void handlePaymentEvent(PaymentEvent paymentEvent) {
         if (paymentEvent.getPayment().getCoinType() == CoinType.XMR)
             moneroSubaddressRepository.updateIsIdleBySubaddress(
                 paymentEvent.getPayment().getCryptoAddress(),
-                false
+                true
             );
     }
 }
