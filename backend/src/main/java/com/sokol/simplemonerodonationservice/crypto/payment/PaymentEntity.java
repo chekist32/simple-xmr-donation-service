@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +22,7 @@ public class PaymentEntity {
     @Column(nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(ZoneOffset.UTC);
+    private final LocalDateTime createdAt = LocalDateTime.now(ZoneOffset.UTC);
     private LocalDateTime confirmedAt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -102,5 +103,26 @@ public class PaymentEntity {
 
     public void setPaymentPurpose(PaymentPurposeType paymentPurpose) {
         this.paymentPurpose = paymentPurpose;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PaymentEntity payment = (PaymentEntity) o;
+
+        if (!Objects.equals(id, payment.id)) return false;
+        if (!Objects.equals(cryptoAddress, payment.cryptoAddress))
+            return false;
+        return createdAt.equals(payment.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (cryptoAddress != null ? cryptoAddress.hashCode() : 0);
+        result = 31 * result + createdAt.hashCode();
+        return result;
     }
 }

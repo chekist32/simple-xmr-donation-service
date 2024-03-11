@@ -21,7 +21,7 @@ public class MoneroConfig {
     private String rpcServerUsername;
     @Value("${monero_wallet_config.rpc_server_password}")
     private String rpcServerPassword;
-    private MoneroListener moneroListener;
+    private final MoneroListener moneroListener;
     private final DonationUserDataRepository donationUserDataRepository;
 
     public MoneroConfig(DonationUserDataRepository donationUserDataRepository,

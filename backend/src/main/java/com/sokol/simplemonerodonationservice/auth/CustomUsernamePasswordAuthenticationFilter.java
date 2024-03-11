@@ -1,7 +1,6 @@
 package com.sokol.simplemonerodonationservice.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +33,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException {
 
             InputStream bodyInputStream = req.getInputStream();
 

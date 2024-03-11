@@ -2,10 +2,7 @@ package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

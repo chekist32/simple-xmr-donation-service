@@ -4,7 +4,6 @@ import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationToken
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -84,5 +83,24 @@ public class UserEntityModificationRequestEntity {
 
     public UserEntity getUser() {
         return user;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntityModificationRequestEntity that = (UserEntityModificationRequestEntity) o;
+
+        if (!id.equals(that.id)) return false;
+        return modificationRequestType == that.modificationRequestType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + modificationRequestType.hashCode();
+        return result;
     }
 }

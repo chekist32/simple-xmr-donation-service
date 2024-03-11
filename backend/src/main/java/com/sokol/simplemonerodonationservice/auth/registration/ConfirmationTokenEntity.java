@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -12,9 +13,9 @@ import java.util.UUID;
 public class ConfirmationTokenEntity {
     private final static long EXPIRATION_TIME = 24;
     @Id
-    private String token = UUID.randomUUID().toString();
+    private final String token = UUID.randomUUID().toString();
     @Column(nullable = false)
-    private LocalDateTime expirationDate = LocalDateTime.now(ZoneOffset.UTC).plusHours(EXPIRATION_TIME);
+    private final LocalDateTime expirationDate = LocalDateTime.now(ZoneOffset.UTC).plusHours(EXPIRATION_TIME);
     private LocalDateTime confirmedAt;
     @ManyToOne
     @JoinColumn(
@@ -67,5 +68,23 @@ public class ConfirmationTokenEntity {
                 ", token='" + token + '\'' +
                 ", confirmedAt=" + confirmedAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConfirmationTokenEntity that = (ConfirmationTokenEntity) o;
+
+        if (!Objects.equals(token, that.token)) return false;
+        return expirationDate.equals(that.expirationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = token != null ? token.hashCode() : 0;
+        result = 31 * result + expirationDate.hashCode();
+        return result;
     }
 }

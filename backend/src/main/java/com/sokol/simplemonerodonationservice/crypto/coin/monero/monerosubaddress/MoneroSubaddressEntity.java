@@ -3,6 +3,7 @@ package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddres
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "monero_subaddresses")
@@ -67,5 +68,20 @@ public class MoneroSubaddressEntity {
 
     public void setLastTransactionTimestamp(Timestamp lastTransactionTimestamp) {
         this.lastTransactionTimestamp = lastTransactionTimestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MoneroSubaddressEntity that = (MoneroSubaddressEntity) o;
+
+        return Objects.equals(subaddress, that.subaddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return subaddress != null ? subaddress.hashCode() : 0;
     }
 }

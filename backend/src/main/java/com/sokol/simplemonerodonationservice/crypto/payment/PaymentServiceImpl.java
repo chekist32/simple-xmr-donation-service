@@ -1,22 +1,13 @@
 package com.sokol.simplemonerodonationservice.crypto.payment;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
-import com.sokol.simplemonerodonationservice.crypto.CryptoTransfer;
-import com.sokol.simplemonerodonationservice.crypto.IncomingCryptoTransactionEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinServiceFactory;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {

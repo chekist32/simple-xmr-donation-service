@@ -14,9 +14,7 @@ public class HttpError {
     public static Map<String, Object> createInvalidArgumentErrorResponseBody(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, Object> body = createDefaultErrorResponseBody(ex, request, HttpStatus.BAD_REQUEST);
         Map<String, String> message = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
-            message.put(fieldError.getField(), fieldError.getDefaultMessage());
-        });
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> message.put(fieldError.getField(), fieldError.getDefaultMessage()));
         body.put("message", message);
         return body;
     }

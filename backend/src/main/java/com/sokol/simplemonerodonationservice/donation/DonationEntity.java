@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +20,7 @@ public class DonationEntity {
     @Column(length = 300)
     private String donationText;
     @Column(nullable = false)
-    private LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
+    private final LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
     @ManyToOne
     @JoinColumn(
             nullable = false,
@@ -63,5 +64,23 @@ public class DonationEntity {
 
     public PaymentEntity getPayment() {
         return payment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DonationEntity that = (DonationEntity) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        return receivedAt.equals(that.receivedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + receivedAt.hashCode();
+        return result;
     }
 }

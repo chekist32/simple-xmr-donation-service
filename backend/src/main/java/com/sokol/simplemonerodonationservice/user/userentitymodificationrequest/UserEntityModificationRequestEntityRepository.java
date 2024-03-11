@@ -1,6 +1,5 @@
 package com.sokol.simplemonerodonationservice.user.userentitymodificationrequest;
 
-import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

@@ -3,6 +3,7 @@ package com.sokol.simplemonerodonationservice.donation.donationuserdata;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -76,5 +77,23 @@ public class DonationUserDataEntity {
 
     public void regenerateToken() {
         this.token = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DonationUserDataEntity that = (DonationUserDataEntity) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        return token.equals(that.token);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + token.hashCode();
+        return result;
     }
 }

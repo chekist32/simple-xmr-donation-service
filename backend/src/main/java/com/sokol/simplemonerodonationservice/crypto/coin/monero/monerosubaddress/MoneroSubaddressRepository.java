@@ -1,6 +1,5 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
