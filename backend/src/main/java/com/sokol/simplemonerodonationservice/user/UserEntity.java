@@ -40,7 +40,7 @@ public class UserEntity implements UserDetails {
     )
     private DonationUserDataEntity donationUserData;
 
-    public UserEntity() { }
+    protected UserEntity() { }
 
     public UserEntity(String email,
                       String username,

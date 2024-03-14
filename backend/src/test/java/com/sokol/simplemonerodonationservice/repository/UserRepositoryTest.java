@@ -4,33 +4,31 @@ import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationU
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase()
-public class UserRepositoryTest {
+class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private DonationUserDataRepository donationUserDataRepository;
 
-    private static List<UserEntity> users = List.of(
+    private static final List<UserEntity> users = List.of(
             new UserEntity(
                     "test1@email.com",
                     "testusername1",
@@ -120,6 +118,7 @@ public class UserRepositoryTest {
         assertTrue(userRepository.existsByEmailAndIsEnabledFalse(user.getEmail()));
     }
 
+    @Test
     public void existsByEmailAndIsEnabledFalse_ShouldReturnFalse() {
         UserEntity user = userRepository.findByEmail(users.get(0).getEmail()).get();
         user.setEnabled(true);
@@ -128,5 +127,27 @@ public class UserRepositoryTest {
         assertFalse(userRepository.existsByEmailAndIsEnabledFalse(user.getEmail()));
     }
 
+    @ParameterizedTest
+    @MethodSource("userProvider")
+    public void findByPrincipal_ShouldReturnSameRecord(UserEntity user) {
+        UserEntity fetchedUserByUsername = userRepository.findByPrincipal(user.getUsername()).get();
+        UserEntity fetchedUserByEmail = userRepository.findByPrincipal(user.getEmail()).get();
+
+        assertEquals(fetchedUserByEmail, fetchedUserByUsername);
+    }
+
+    @Test
+    public void countByIsEnabledTrue_ShouldReturn2() {
+        UserEntity user = userRepository.findByEmail(users.get(0).getEmail()).get();
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        UserEntity user1 = userRepository.findByEmail(users.get(1).getEmail()).get();
+        user1.setEnabled(true);
+        userRepository.save(user1);
+
+        assertEquals(2, userRepository.countByIsEnabledTrue());
+
+    }
 
 }

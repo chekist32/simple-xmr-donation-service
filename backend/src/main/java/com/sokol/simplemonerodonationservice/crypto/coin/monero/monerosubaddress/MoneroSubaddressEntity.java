@@ -19,7 +19,8 @@ public class MoneroSubaddressEntity {
     private String lastTransactionTxHash;
     private Timestamp lastTransactionTimestamp;
 
-    public MoneroSubaddressEntity() { }
+    protected MoneroSubaddressEntity() { }
+
     public MoneroSubaddressEntity(String subaddress, String primaryAddress, int index) {
         this.subaddress = subaddress;
         this.primaryAddress = primaryAddress;

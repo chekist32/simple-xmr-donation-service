@@ -31,7 +31,7 @@ public class ConfirmationTokenEntity {
         this.user = user;
     }
 
-    public ConfirmationTokenEntity() { }
+    protected ConfirmationTokenEntity() { }
 
     public String getToken() {
         return token;

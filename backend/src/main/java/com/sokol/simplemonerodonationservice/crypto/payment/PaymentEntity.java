@@ -31,7 +31,7 @@ public class PaymentEntity {
     @Column(nullable = false)
     private PaymentPurposeType paymentPurpose;
 
-    public PaymentEntity() { }
+    protected PaymentEntity() { }
 
     public PaymentEntity(String cryptoAddress,
                          CoinType coinType,

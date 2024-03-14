@@ -30,11 +30,12 @@ public class DonationEntity {
     @OneToOne
     @JoinColumn(
             nullable = false,
+            unique = true,
             name = "payment_id"
     )
     private PaymentEntity payment;
 
-    public DonationEntity() { }
+    protected DonationEntity() { }
 
     public DonationEntity(String senderUsername,
                           String donationText,
