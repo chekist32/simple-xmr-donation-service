@@ -8,7 +8,4 @@ class SimpleMoneroDonationServiceApplicationTests {
 	@Test
 	void contextLoads() { }
 
-
-
-
 }
