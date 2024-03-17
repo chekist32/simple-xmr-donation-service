@@ -37,6 +37,6 @@ public class CustomDefaultExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody(ex, request, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody("", request, HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

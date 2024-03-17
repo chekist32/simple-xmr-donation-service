@@ -9,6 +9,7 @@ public interface PaymentService {
     PaymentEntity generateCryptoPayment(CoinType coinType, PaymentPurposeType paymentPurpose, double requiredAmount);
 
     PaymentEntity findPaymentById(UUID paymentId);
+    PaymentEntity findPendingPaymentByCryptoAddress(String cryptoAddress);
 
     PaymentEntity expirePayment(PaymentEntity payment);
 

@@ -21,6 +21,10 @@ public class HttpError {
 
     public static Map<String, Object> createDefaultErrorResponseBody(Exception ex, WebRequest request, HttpStatus httpStatus) {
         String message = ex.getMessage();
+        return createDefaultErrorResponseBody(message, request, httpStatus);
+    }
+
+    public static Map<String, Object> createDefaultErrorResponseBody(String message, WebRequest request, HttpStatus httpStatus) {
         String path = request.getDescription(false).split("=")[1];
         return createDefaultErrorResponseBody(message, path, httpStatus);
     }

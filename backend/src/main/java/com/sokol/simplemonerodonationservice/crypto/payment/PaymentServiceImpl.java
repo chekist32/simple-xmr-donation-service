@@ -75,4 +75,10 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no payment associated with such paymentId"));
     }
+
+    @Override
+    public PaymentEntity findPendingPaymentByCryptoAddress(String cryptoAddress) {
+        return paymentRepository.findPendingPaymentByCryptoAddress(cryptoAddress)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no payment associated with such cryptoAddress"));
+    }
 }

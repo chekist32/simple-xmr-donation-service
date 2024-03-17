@@ -8,15 +8,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Service
 public class SseEmitterService {
     private static final SseEmitter.SseEventBuilder keepAliveSseEventBuilder = SseEmitter.event().name("keep-alive").data("keep-alive");
-    private static final CopyOnWriteArrayList<SseEmitter> inMemoryDonationSseEmitterList = new CopyOnWriteArrayList<>();
+    private static final ConcurrentLinkedQueue<SseEmitter> inMemoryDonationSseEmitterList = new ConcurrentLinkedQueue<>();
     private static final ScheduledExecutorService keepAliveExecutor = new ScheduledThreadPoolExecutor(1);
 
     static {
@@ -60,7 +57,6 @@ public class SseEmitterService {
             try {
                 sseEmitter.send(msg);
             } catch (IOException e) {
-                e.printStackTrace();
                 removeDonationSseEmitter(sseEmitter);
             }
         }
@@ -70,7 +66,6 @@ public class SseEmitterService {
             try {
                 sseEmitter.send(sseEventBuilder);
             } catch (IOException e) {
-                e.printStackTrace();
                 removeDonationSseEmitter(sseEmitter);
             }
         }

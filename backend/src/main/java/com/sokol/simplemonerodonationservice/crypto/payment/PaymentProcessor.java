@@ -75,14 +75,16 @@ public class PaymentProcessor {
     protected void handleIncomingCryptoTransactionEvent(IncomingCryptoTransactionEvent incomingCryptoTransactionEvent) {
         try {
             CryptoTransfer cryptoTransfer = incomingCryptoTransactionEvent.getCryptoTransfer();
-            PaymentEntity payment = paymentService.confirmPaymentByCryptoAddress(
-                    cryptoTransfer.cryptoAddressTo(),
-                    cryptoTransfer.amount()
-            );
-            removeScheduleTask(payment.getId());
+            PaymentEntity payment = paymentService.findPendingPaymentByCryptoAddress(cryptoTransfer.cryptoAddressTo());
 
             if (!checkRequirements(payment, cryptoTransfer))
                 return; // TODO;
+
+            paymentService.confirmPayment(
+                    payment,
+                    cryptoTransfer.amount()
+            );
+            removeScheduleTask(payment.getId());
 
             applicationEventPublisher.publishEvent(new ConfirmedPaymentEvent(this.getClass(), payment));
         } catch (ResourceNotFoundException ignored) { }

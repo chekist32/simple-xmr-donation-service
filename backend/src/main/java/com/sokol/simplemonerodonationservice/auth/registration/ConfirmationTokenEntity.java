@@ -63,14 +63,6 @@ public class ConfirmationTokenEntity {
     }
 
     @Override
-    public String toString() {
-        return "ConfirmationTokenEntity{" +
-                ", token='" + token + '\'' +
-                ", confirmedAt=" + confirmedAt +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
