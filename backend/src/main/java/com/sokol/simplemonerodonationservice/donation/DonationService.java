@@ -2,7 +2,10 @@ package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
-import com.sokol.simplemonerodonationservice.crypto.payment.*;
+import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentProcessor;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentPurposeType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;

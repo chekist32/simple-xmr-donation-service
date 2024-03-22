@@ -1,7 +1,6 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
-import com.sokol.simplemonerodonationservice.crypto.payment.PaymentPurposeType;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
 
