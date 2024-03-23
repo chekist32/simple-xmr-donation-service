@@ -2,7 +2,10 @@ package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
+import monero.daemon.model.MoneroNetworkType;
+import monero.wallet.MoneroWalletFull;
 import monero.wallet.MoneroWalletRpc;
+import monero.wallet.model.MoneroWalletListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -31,15 +34,23 @@ public class MoneroConfig {
     }
 
     @Bean
-    public MoneroWalletRpc moneroWalletRpc() {
-
-        MoneroWalletRpc wallet = new MoneroWalletRpc(rpcServerUrl, rpcServerUsername, rpcServerPassword);
-        wallet.openWallet(walletPath, walletPassword);
+    public MoneroWalletFull moneroWalletRpc() {
+        MoneroWalletFull wallet = MoneroWalletFull.openWallet(walletPath, walletPassword, MoneroNetworkType.STAGENET, "http://stagenet.community.rino.io:38081");
 
         if (donationUserDataRepository.count() > 0) {
             DonationUserDataEntity donationUserData = donationUserDataRepository.findAll().iterator().next();
             moneroListener.updateCryptoConfirmationType(donationUserData.getConfirmationType());
         }
+
+        wallet.sync(new MoneroWalletListener() {
+            @Override
+            public void onSyncProgress(long height, long startHeight, long endHeight, double percentDone, String message) {
+                System.out.println("Height: "+height+"\nPerecentDone: "+percentDone);
+            }
+        });
+        wallet.save();
+
+        wallet.startSyncing(5000L);
 
         wallet.addListener(moneroListener);
 

@@ -8,6 +8,7 @@ import com.sokol.simplemonerodonationservice.crypto.payment.ExpiredPaymentEvent;
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEvent;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import monero.wallet.MoneroWalletFull;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
 import monero.wallet.model.MoneroSubaddress;
@@ -22,10 +23,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class MoneroSubaddressService {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
-    private final MoneroWalletRpc wallet;
+    private final MoneroWalletFull wallet;
 
     public MoneroSubaddressService(MoneroSubaddressRepository moneroSubaddressRepository,
-                                   MoneroWalletRpc wallet) {
+                                   MoneroWalletFull wallet) {
         this.moneroSubaddressRepository = moneroSubaddressRepository;
         this.wallet = wallet;
     }

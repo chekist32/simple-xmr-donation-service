@@ -24,7 +24,7 @@ public class MoneroListener extends AbstractCoinListener implements MoneroWallet
     }
 
     private boolean checkRequirements(MoneroTxWallet moneroTxWallet) {
-        boolean result = moneroTxWallet.isIncoming() && !moneroTxWallet.isDoubleSpendSeen();
+        boolean result = moneroTxWallet.isIncoming();
 
         switch (confirmationType) {
             case UNCONFIRMED -> result &= !moneroTxWallet.isConfirmed();
@@ -41,7 +41,7 @@ public class MoneroListener extends AbstractCoinListener implements MoneroWallet
         MoneroTxWallet moneroTxWallet = output.getTx();
         String from = output.getStealthPublicKey();
 
-        if (checkRequirements(moneroTxWallet)) {
+        if (false) {
             moneroTxWallet.getIncomingTransfers()
                     .stream()
                     .map(incomingTransfer -> MoneroUtils.MoneroTransferToCryptoTransferMapper(incomingTransfer, from))
