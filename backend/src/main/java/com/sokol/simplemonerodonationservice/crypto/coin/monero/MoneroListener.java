@@ -3,27 +3,32 @@ package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.crypto.CryptoTransfer;
 import com.sokol.simplemonerodonationservice.crypto.coin.AbstractCoinListener;
-import monero.wallet.model.MoneroOutputWallet;
-import monero.wallet.model.MoneroTxWallet;
-import monero.wallet.model.MoneroWalletListenerI;
+import monero.daemon.MoneroDaemonRpc;
+import monero.daemon.model.MoneroDaemonListener;
+import monero.wallet.MoneroWalletFull;
+import monero.wallet.model.*;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigInteger;
 
 public class MoneroListener extends AbstractCoinListener implements MoneroWalletListenerI {
     private CryptoConfirmationType confirmationType;
+    private final MoneroWalletFull moneroWalletFull;
 
-    public MoneroListener(ApplicationEventPublisher applicationEventPublisher) {
-        this(CryptoConfirmationType.UNCONFIRMED, applicationEventPublisher);
+    public MoneroListener(ApplicationEventPublisher applicationEventPublisher, MoneroWalletFull moneroWalletFull) {
+        this(CryptoConfirmationType.PARTIALLY_CONFIRMED, applicationEventPublisher, moneroWalletFull);
     }
 
     public MoneroListener(CryptoConfirmationType confirmationType,
-                          ApplicationEventPublisher applicationEventPublisher) {
+                          ApplicationEventPublisher applicationEventPublisher, MoneroWalletFull moneroWalletFull) {
         super(applicationEventPublisher);
         this.confirmationType = confirmationType;
+        this.moneroWalletFull = moneroWalletFull;
     }
 
     private boolean checkRequirements(MoneroTxWallet moneroTxWallet) {
+//        if (moneroTxWallet == null) return false;
+
         boolean result = moneroTxWallet.isIncoming();
 
         switch (confirmationType) {
@@ -38,15 +43,28 @@ public class MoneroListener extends AbstractCoinListener implements MoneroWallet
 
     @Override
     public void onOutputReceived(MoneroOutputWallet output) {
-        MoneroTxWallet moneroTxWallet = output.getTx();
         String from = output.getStealthPublicKey();
 
-        if (false) {
+        moneroWalletFull.save();
+
+        System.out.println("########Start###########");
+        System.out.println(output);
+        System.out.println("---------------");
+        System.out.println(output.getTx());
+        System.out.println("#########End##########");
+
+        var etst = moneroWalletFull.getTxs(new MoneroTxQuery());
+
+        MoneroTxWallet moneroTxWallet = moneroWalletFull.getTx(output.getTx().getHash());
+        var test1 = moneroWalletFull.getIncomingTransfers();
+
+        if (checkRequirements(moneroTxWallet)) {
             moneroTxWallet.getIncomingTransfers()
                     .stream()
                     .map(incomingTransfer -> MoneroUtils.MoneroTransferToCryptoTransferMapper(incomingTransfer, from))
                     .forEach(this::onReceived);
         }
+
     }
 
     @Override
@@ -64,7 +82,10 @@ public class MoneroListener extends AbstractCoinListener implements MoneroWallet
     }
 
     @Override
-    public void onSyncProgress(long height, long startHeight, long endHeight, double percentDone, String message) { }
+    public void onSyncProgress(long height, long startHeight, long endHeight, double percentDone, String message) {
+        System.out.println(moneroWalletFull.getTxs().get(moneroWalletFull.getTxs().size()-1));
+        System.out.println(height);
+    }
 
     @Override
     public void onNewBlock(long height) { }
