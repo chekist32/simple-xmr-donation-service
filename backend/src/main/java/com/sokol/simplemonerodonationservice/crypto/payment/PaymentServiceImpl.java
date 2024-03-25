@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -80,5 +81,10 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentEntity findPendingPaymentByCryptoAddress(String cryptoAddress) {
         return paymentRepository.findPendingPaymentByCryptoAddress(cryptoAddress)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no payment associated with such cryptoAddress"));
+    }
+
+    @Override
+    public List<PaymentEntity> findAllPendingPayments() {
+        return paymentRepository.findAllByPaymentStatus(PaymentStatus.PENDING);
     }
 }

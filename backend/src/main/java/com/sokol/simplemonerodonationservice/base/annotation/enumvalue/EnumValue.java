@@ -2,6 +2,7 @@ package com.sokol.simplemonerodonationservice.base.annotation.enumvalue;
 
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 

@@ -1,5 +1,6 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import monero.wallet.MoneroWalletRpc;
@@ -21,17 +22,15 @@ public class MoneroConfig {
     private String rpcServerUsername;
     @Value("${monero_wallet_config.rpc_server_password}")
     private String rpcServerPassword;
-    private final MoneroListener moneroListener;
     private final DonationUserDataRepository donationUserDataRepository;
 
-    public MoneroConfig(DonationUserDataRepository donationUserDataRepository,
-                        ApplicationEventPublisher applicationEventPublisher) {
+    public MoneroConfig(DonationUserDataRepository donationUserDataRepository) {
         this.donationUserDataRepository = donationUserDataRepository;
-        this.moneroListener = new MoneroListener(applicationEventPublisher);
     }
 
     @Bean
-    public MoneroWalletRpc moneroWalletRpc() {
+    public MoneroWalletRpc moneroWalletRpc(ApplicationEventPublisher applicationEventPublisher) {
+        MoneroListener moneroListener = new MoneroListener(applicationEventPublisher);
 
         MoneroWalletRpc wallet = new MoneroWalletRpc(rpcServerUrl, rpcServerUsername, rpcServerPassword);
         wallet.openWallet(walletPath, walletPassword);

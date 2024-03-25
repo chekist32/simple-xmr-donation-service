@@ -5,6 +5,7 @@ import com.sokol.simplemonerodonationservice.crypto.CryptoTransfer;
 import com.sokol.simplemonerodonationservice.crypto.IncomingCryptoTransactionEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.currencyconverter.CryptoCurrencyConverter;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,12 @@ public class PaymentProcessor {
                             ApplicationEventPublisher applicationEventPublisher) {
         this.paymentService = paymentService;
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @PostConstruct
+    public void init() {
+        paymentService.findAllPendingPayments()
+                .forEach(paymentService::expirePayment);
     }
 
     public PaymentEntity generateCryptoPayment(CoinType coinType, PaymentPurposeType paymentPurpose, double requiredAmount, long timeout) {
