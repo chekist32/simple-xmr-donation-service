@@ -9,6 +9,7 @@ import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundExce
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.UserEntityModificationRequestService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

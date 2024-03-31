@@ -5,6 +5,8 @@ public record DonationResponseDTO(
 
         double minAmount,
 
+        String coinType,
+
         int timeout,
 
         String paymentId

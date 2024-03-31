@@ -1,16 +1,21 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinListenerUpdateEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
+import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroListener;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroUtils;
 import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
 import com.sokol.simplemonerodonationservice.crypto.payment.ExpiredPaymentEvent;
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEvent;
+import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import monero.wallet.MoneroWalletRpc;
 import monero.wallet.model.MoneroAccount;
 import monero.wallet.model.MoneroSubaddress;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +28,14 @@ import java.util.stream.Collectors;
 public class MoneroSubaddressService {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
     private final MoneroWalletRpc wallet;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public MoneroSubaddressService(MoneroSubaddressRepository moneroSubaddressRepository,
-                                   MoneroWalletRpc wallet) {
+                                   MoneroWalletRpc wallet,
+                                   ApplicationEventPublisher applicationEventPublisher) {
         this.moneroSubaddressRepository = moneroSubaddressRepository;
         this.wallet = wallet;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PostConstruct
@@ -53,7 +61,7 @@ public class MoneroSubaddressService {
     }
 
     public MoneroSubaddressEntity getIdleDonationMoneroSubaddress(String primaryAddress) {
-        MoneroAccount moneroAccount =  wallet.getAccounts()
+        MoneroAccount moneroAccount = wallet.getAccounts()
                 .stream()
                 .filter(account -> account.getPrimaryAddress().equals(primaryAddress))
                 .findFirst()
@@ -101,6 +109,11 @@ public class MoneroSubaddressService {
                 );
 
         return moneroSubaddressRepository.save(createdMoneroSubaddressEntity);
+    }
+
+    public void setNewListener(CryptoConfirmationType confirmationType) {
+        wallet.getListeners().forEach(wallet::removeListener);
+        wallet.addListener(new MoneroListener(confirmationType, applicationEventPublisher));
     }
 
     @EventListener(classes = {ConfirmedPaymentEvent.class, ExpiredPaymentEvent.class})

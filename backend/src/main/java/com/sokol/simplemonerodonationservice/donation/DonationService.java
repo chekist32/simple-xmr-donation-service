@@ -1,6 +1,8 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinListenerUpdateEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
 import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
@@ -12,6 +14,7 @@ import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationU
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,15 +28,18 @@ public class DonationService {
     private final UserRepository userRepository;
     private final DonationUserDataRepository donationUserDataRepository;
     private final PaymentProcessor paymentProcessor;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public DonationService(DonationRepository donationRepository,
                            UserRepository userRepository,
                            DonationUserDataRepository donationUserDataRepository,
-                           PaymentProcessor paymentProcessor) {
+                           PaymentProcessor paymentProcessor,
+                           ApplicationEventPublisher applicationEventPublisher) {
         this.donationRepository = donationRepository;
         this.userRepository = userRepository;
         this.donationUserDataRepository = donationUserDataRepository;
         this.paymentProcessor = paymentProcessor;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     private UserEntity findUserByPrincipal(String principal) {
@@ -58,9 +64,9 @@ public class DonationService {
 
     public List<DonationDTO> getAllDonations(String principal, int pageNum, int pageSize) {
         return donationRepository.findByUser(
-                    findUserByPrincipal(principal),
-                    PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "confirmedAt"))
-                )
+                findUserByPrincipal(principal),
+                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "payment.confirmedAt"))
+        )
                 .stream()
                 .map(DonationUtils::DonationEntityToDonationDTOMapper)
                 .toList();
@@ -87,6 +93,7 @@ public class DonationService {
         return new DonationResponseDTO(
                 payment.getCryptoAddress(),
                 payment.getRequiredAmount(),
+                payment.getCoinType().name(),
                 donationUserData.getTimeout(),
                 payment.getId().toString()
         );
@@ -146,10 +153,13 @@ public class DonationService {
 
         DonationUserDataEntity donationUserData = user.getDonationUserData();
         donationUserData.setMinDonationAmount(donationSettingsDataDTO.minAmount());
-        donationUserData.setTimeout(donationUserData.getTimeout());
+        donationUserData.setConfirmationType(CryptoConfirmationType.valueOf(donationSettingsDataDTO.confirmationType()));
+        donationUserData.setTimeout(donationSettingsDataDTO.timeout()*1000);
         donationUserDataRepository.save(donationUserData);
 
-        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
+        applicationEventPublisher.publishEvent(new CoinListenerUpdateEvent(donationSettingsDataDTO, principal, this.getClass()));
+
+        return donationSettingsDataDTO;
     }
 
     @EventListener(classes = ConfirmedPaymentEvent.class)

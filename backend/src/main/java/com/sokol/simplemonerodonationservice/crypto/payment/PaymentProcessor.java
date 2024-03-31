@@ -48,7 +48,7 @@ public class PaymentProcessor {
     private void processPayment(PaymentEntity payment, long timeout) {
         ScheduledFuture<Void> scheduledTask = (ScheduledFuture<Void>) executorService.schedule(
                 () -> handleExpiredPayment(payment.getId()),
-                timeout+60*1000L,
+                timeout,
                 TimeUnit.MILLISECONDS
         );
 

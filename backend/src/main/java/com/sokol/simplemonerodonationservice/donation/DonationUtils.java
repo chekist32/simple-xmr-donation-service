@@ -19,7 +19,7 @@ public class DonationUtils {
         return new DonationSettingsDataDTO(
                 donationUserData.getToken(),
                 donationUserData.getConfirmationType().toString(),
-                donationUserData.getTimeout(),
+                donationUserData.getTimeout()/1000,
                 donationUserData.getMinDonationAmount()
         );
     }
