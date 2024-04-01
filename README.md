@@ -40,7 +40,7 @@ services:
         # Here you should paste a path (directory) where the view-only monero wallet is located.
       - /var/docker_data/simple_monero_donation_service/monero/wallets/test1_wallet:/monero/wallet
     command:
-      # For reference see: https://github.com/chekist32/monero-wallet-rpc-docker/blob/master/docs/monero-wallet-rpc-man.md
+        # For reference see: https://github.com/chekist32/monero-wallet-rpc-docker/blob/master/docs/monero-wallet-rpc-man.md
       - "--stagenet" 
       - "--daemon-address=stagenet.community.rino.io:38081"
       - "--trusted-daemon" 
@@ -49,8 +49,7 @@ services:
       - "--wallet-dir=/monero/wallet"
 
   backend:
-    build:
-      context: ./backend
+    image: chekist32/simple-xmr-donation-service-backend:v0.5.0
     env_file:
         # Here you can paste a path to the .env file for backend container.
         # Example can be found under backend/env.example

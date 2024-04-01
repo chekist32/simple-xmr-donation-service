@@ -10,6 +10,7 @@ import Avatar from "@shared-components/avatar/Avatar";
 import CustomInput from "@shared-components/custom_input/CustomInput";
 import CustomButton from "@shared-components/custom_button/CustomButton";
 import CustomTextarea from "@shared-components/custom_textarea/CustomTextarea";
+import CustomSelect from "@shared-components/custom_select/CustomSelect";
 
 function DonationUserPageView() {
   const [donationUserData, setDonationUserData] = useState({});
@@ -32,13 +33,14 @@ function DonationUserPageView() {
 
     const username = document.getElementById("username-field")?.value;
     const donationText = document.getElementById("donationText-field")?.value;
+    const coinType = document.getElementById("currencySelect-field")?.value;
 
     try {
       const res = await axios.post(
         import.meta.env.VITE_API_BASE_URL +
           "/api/donation/donate/" +
           donationUserData.username,
-        { senderUsername: username, donationText: donationText },
+        { senderUsername: username, donationText: donationText, coinType: coinType },
       );
       setPaymentData(res.data);
       setShowInvoice(true);
@@ -81,6 +83,11 @@ function DonationUserPageView() {
                     placeholder: "Your message",
                   }}
                 />
+                <CustomSelect selectProps={{
+                  id: "currencySelect-field"
+                }}>
+                  <option value="XMR">XMR</option>
+                </CustomSelect>
                 <CustomButton buttonProps={{ type: "submit" }}>
                   Send
                 </CustomButton>

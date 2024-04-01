@@ -6,8 +6,9 @@ import styles from "./Invoice.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ReadonlyField from '@shared-components/readonly_field/ReadonlyField';
+import TimeoutBar from '@shared-components/timeout_bar/TimeoutBar';
 
-function Invoice({ paymentData, timeout, closeHandler }) {
+function Invoice({ paymentData, closeHandler }) {
   const [msg, setMsg] = useState("");
   const [status, setStatus] = useState("none");
 
@@ -122,13 +123,13 @@ function Invoice({ paymentData, timeout, closeHandler }) {
       <div className={styles.invoice_container}>
         <div className={styles.invoice}>
           <div className={styles.invoice_header}>Your invoice</div>
+          <TimeoutBar timeout={paymentData.timeout} text={"Awaiting payment..."}/>
           <div className={styles.amount}>
-            Min amount:{" "}
-            {paymentData.minAmount ? paymentData.minAmount : "0.01 XMR"}
+            { "Min amount: "+paymentData.minAmount+" "+paymentData.coinType}
           </div>
           <div className={styles.subaddress}>
             <label htmlFor="">Address</label>
-            <ReadonlyField value={paymentData.subaddress} />
+            <ReadonlyField value={paymentData.cryptoAddress} />
           </div>
           <div className={styles.qr_code_container}>
             <QRCode
@@ -138,7 +139,7 @@ function Invoice({ paymentData, timeout, closeHandler }) {
                 maxHeight: "256px",
                 height: "80%",
               }}
-              value={paymentData.subaddress}
+              value={paymentData.cryptoAddress}
             />
           </div>
           <div className={styles.paymentId}>
@@ -164,7 +165,9 @@ Invoice.propTypes = {
   paymentData: PropTypes.shape({
     paymentId: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
     minAmount: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-    subaddress: PropTypes.string
+    timeout: PropTypes.number,
+    coinType: PropTypes.string,
+    cryptoAddress: PropTypes.string
   })
 }
 

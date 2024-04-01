@@ -1,0 +1,40 @@
+monero_wallet_config:
+  wallet_path: ${MONERO_WALLET_PATH}
+  wallet_password: ${MONERO_WALLET_PASSWORD}
+  rpc_server_url: ${MONERO_RPC_SERVER_URL}
+  rpc_server_username: ${MONERO_RPC_SERVER_USERNAME}
+  rpc_server_password: ${MONERO_RPC_SERVER_PASSWORD}
+
+spring:
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_DB_HOST}/${POSTGRES_DB_NAME}
+    username: ${POSTGRES_DB_USERNAME}
+    password: ${POSTGRES_DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    timeout: 7d
+
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false

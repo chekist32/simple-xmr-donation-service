@@ -1,63 +1,61 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinListenerUpdateEvent;
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
+import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentProcessor;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentPurposeType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
-import com.sokol.simplemonerodonationservice.monero.MoneroService;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressEntity;
-import com.sokol.simplemonerodonationservice.monero.monerosubaddress.MoneroSubaddressScheduledExecutorService;
-import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
-import com.sokol.simplemonerodonationservice.payment.PaymentService;
+import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
 public class DonationService {
     private final DonationRepository donationRepository;
-    private final MoneroService moneroService;
     private final UserRepository userRepository;
     private final DonationUserDataRepository donationUserDataRepository;
-    private final MoneroSubaddressScheduledExecutorService moneroSubaddressScheduledExecutorService;
-    private final PaymentService paymentService;
+    private final PaymentProcessor paymentProcessor;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public DonationService(DonationRepository donationRepository,
-                           MoneroService moneroService,
                            UserRepository userRepository,
                            DonationUserDataRepository donationUserDataRepository,
-                           MoneroSubaddressScheduledExecutorService moneroSubaddressScheduledExecutorService,
-                           PaymentService paymentService) {
+                           PaymentProcessor paymentProcessor,
+                           ApplicationEventPublisher applicationEventPublisher) {
         this.donationRepository = donationRepository;
-        this.moneroService = moneroService;
         this.userRepository = userRepository;
         this.donationUserDataRepository = donationUserDataRepository;
-        this.moneroSubaddressScheduledExecutorService = moneroSubaddressScheduledExecutorService;
-        this.paymentService = paymentService;
+        this.paymentProcessor = paymentProcessor;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    private UserEntity findUserByPrincipal(String principal) {
+        return userRepository.findByPrincipal(principal)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
     }
 
     public long getDonationCount(String principal) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
-        return donationRepository.countByUserAndConfirmedAtNotNull(user);
+        return donationRepository.countByUser(findUserByPrincipal(principal));
     }
 
     public List<DonationDTO> getAllDonations(String principal) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
-
-        List<DonationEntity> donationEntityList = donationRepository.findByUserAndConfirmedAtNotNull(user);
-
-
-        return donationEntityList.stream().map(DonationUtils::DonationEntityToDonationDTOMapper).toList();
-
+        return donationRepository.findByUser(findUserByPrincipal(principal))
+                .stream()
+                .map(DonationUtils::DonationEntityToDonationDTOMapper)
+                .toList();
     }
 
     public List<DonationDTO> getAllDonations(String principal, int pageNum) {
@@ -65,57 +63,58 @@ public class DonationService {
     }
 
     public List<DonationDTO> getAllDonations(String principal, int pageNum, int pageSize) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
-
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "confirmedAt"));
-        List<DonationEntity> donationEntityList = donationRepository.findByUserAndConfirmedAtNotNull(user, pageable);
-
-        return donationEntityList.stream().map(DonationUtils::DonationEntityToDonationDTOMapper).toList();
+        return donationRepository.findByUser(
+                findUserByPrincipal(principal),
+                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "payment.confirmedAt"))
+        )
+                .stream()
+                .map(DonationUtils::DonationEntityToDonationDTOMapper)
+                .toList();
     }
 
     public DonationResponseDTO implementDonationRequest(DonationRequestDTO donationRequestDTO, String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such username"));
+        UserEntity user = findUserByPrincipal(username);
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
 
-        PaymentEntity payment = paymentService.createPayment();
-
-        DonationEntity createdDonation = new DonationEntity(
-                donationRequestDTO.senderUsername(),
-                donationRequestDTO.donationText(),
-                LocalDateTime.now(ZoneOffset.UTC),
-                user,
-                payment
+        PaymentEntity payment = paymentProcessor.generateCryptoPayment(
+                CoinType.valueOf(donationRequestDTO.coinType()),
+                PaymentPurposeType.DONATION,
+                donationUserData.getMinDonationAmount(),
+                donationUserData.getTimeout()
         );
 
-        MoneroSubaddressEntity moneroSubaddress = moneroService.getDonationMoneroSubaddress();
-        createdDonation.setMoneroSubaddress(moneroSubaddress.getSubaddress());
-        donationRepository.save(createdDonation);
+        donationRepository.save(new DonationEntity(
+                donationRequestDTO.senderUsername(),
+                donationRequestDTO.donationText(),
+                user,
+                payment
+        ));
 
-        moneroSubaddressScheduledExecutorService.setOccupationTimeout(moneroSubaddress, createdDonation);
-
-        return new DonationResponseDTO(moneroSubaddress.getSubaddress(), payment.getId().toString());
+        return new DonationResponseDTO(
+                payment.getCryptoAddress(),
+                payment.getRequiredAmount(),
+                payment.getCoinType().name(),
+                donationUserData.getTimeout(),
+                payment.getId().toString()
+        );
     }
 
     public DonationUserDataDTO getDonationUserDataByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such username"));
+        UserEntity user = findUserByPrincipal(username);
         DonationUserDataEntity donationUserData = user.getDonationUserData();
 
         return new DonationUserDataDTO(user.getUsername(), donationUserData.getGreetingText());
     }
 
     public DonationUserDataDTO getDonationUserDataByPrincipal(String principal) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+        UserEntity user = findUserByPrincipal(principal);
         DonationUserDataEntity donationUserData = user.getDonationUserData();
 
         return new DonationUserDataDTO(user.getUsername(), donationUserData.getGreetingText());
     }
 
     public DonationUserDataDTO modifyDonationUserDataByPrincipal(String principal, DonationUserDataDTO donationUserDataDTO) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+        UserEntity user = findUserByPrincipal(principal);
 
         user.setUsername(donationUserDataDTO.username());
         userRepository.save(user);
@@ -126,15 +125,51 @@ public class DonationService {
 
         return donationUserDataDTO;
     }
+
     public boolean validateToken(String token) {
-        return userRepository.existsByToken(token);
+        return donationUserDataRepository.existsByToken(token);
     }
 
     public DonationSettingsDataDTO getDonationSettingsDataDTOByPrincipal(String principal) {
-        UserEntity user = userRepository.findByPrincipal(principal)
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with such principal"));
+        UserEntity user = findUserByPrincipal(principal);
 
-        return new DonationSettingsDataDTO(user.getToken());
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+
+        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
     }
 
+    public DonationSettingsDataDTO regenerateDonationToken(String principal) {
+        UserEntity user = findUserByPrincipal(principal);
+
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+        donationUserData.regenerateToken();
+        donationUserDataRepository.save(donationUserData);
+
+        return DonationUtils.DonationUserDataToDonationSettingsDataDTOMapper(donationUserData);
+    }
+
+    public DonationSettingsDataDTO updateDonationSettingsData(String principal, DonationSettingsDataDTO donationSettingsDataDTO) {
+        UserEntity user = findUserByPrincipal(principal);
+
+        DonationUserDataEntity donationUserData = user.getDonationUserData();
+        donationUserData.setMinDonationAmount(donationSettingsDataDTO.minAmount());
+        donationUserData.setConfirmationType(CryptoConfirmationType.valueOf(donationSettingsDataDTO.confirmationType()));
+        donationUserData.setTimeout(donationSettingsDataDTO.timeout()*1000);
+        donationUserDataRepository.save(donationUserData);
+
+        applicationEventPublisher.publishEvent(new CoinListenerUpdateEvent(donationSettingsDataDTO, principal, this.getClass()));
+
+        return donationSettingsDataDTO;
+    }
+
+    @EventListener(classes = ConfirmedPaymentEvent.class)
+    protected void handleConfirmedPaymentEvent(ConfirmedPaymentEvent confirmedPaymentEvent) {
+        PaymentEntity payment = confirmedPaymentEvent.getPayment();
+        if (payment.getPaymentPurpose() == PaymentPurposeType.DONATION)
+            donationRepository
+                    .findDonationByPayment(payment)
+                    .ifPresent(
+                            donationEntity -> SseEmitterService.sendDonationMessageToAllClients(DonationUtils.DonationEntityToDonationDTOMapper(donationEntity))
+                    );
+    }
 }

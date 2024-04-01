@@ -6,3 +6,7 @@
   display: flex;
   justify-content: center;
 }
+
+.user-settings-donation-view-main-confirmationType-select {
+  width: 95%;
+}

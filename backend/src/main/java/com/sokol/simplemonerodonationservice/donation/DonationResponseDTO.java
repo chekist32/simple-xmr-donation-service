@@ -1,8 +1,13 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 public record DonationResponseDTO(
-        String subaddress,
-        String paymentId
-) {
+        String cryptoAddress,
 
-}
+        double minAmount,
+
+        String coinType,
+
+        int timeout,
+
+        String paymentId
+) { }

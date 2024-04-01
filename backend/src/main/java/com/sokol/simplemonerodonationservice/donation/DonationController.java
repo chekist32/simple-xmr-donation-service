@@ -2,6 +2,7 @@ package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,9 @@ import java.util.List;
 @RequestMapping("/api/donation")
 public class DonationController {
     private final DonationService donationService;
-    private final SseEmitterService sseEmitterService;
-    public DonationController(DonationService donationService,
-                              SseEmitterService sseEmitterService) {
+
+    public DonationController(DonationService donationService) {
         this.donationService = donationService;
-        this.sseEmitterService = sseEmitterService;
     }
 
     @GetMapping("/getAll")
@@ -40,13 +39,13 @@ public class DonationController {
 
     @GetMapping("/test")
     public void sendTestDonation() {
-        sseEmitterService.sendTestDonationMessageToAllClients();
+        SseEmitterService.sendTestDonationMessageToAllClients();
     }
 
     @GetMapping(value = "/emitter", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter donationSseEmitter(@RequestParam("token") String token) {
         if (!donationService.validateToken(token)) throw new AccessDeniedException("Bad token");
-        return sseEmitterService.createDonationSseEmitter();
+        return SseEmitterService.createDonationSseEmitter();
     }
 
     @GetMapping("/donate/{username}")
@@ -57,9 +56,9 @@ public class DonationController {
     }
 
     @PostMapping("/donate/{username}")
-    public ResponseEntity<DonationResponseDTO> fetchMoneroSubbadressByUsername(
+    public ResponseEntity<DonationResponseDTO> fetchMoneroSubaddressByUsername(
             @PathVariable String username,
-            @RequestBody DonationRequestDTO donationRequestDTO
+            @RequestBody @Valid DonationRequestDTO donationRequestDTO
     ) {
         DonationResponseDTO body = donationService.implementDonationRequest(donationRequestDTO, username);
         return new ResponseEntity<>(body, HttpStatus.OK);

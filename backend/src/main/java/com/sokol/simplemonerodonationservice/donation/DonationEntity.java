@@ -1,10 +1,12 @@
 package com.sokol.simplemonerodonationservice.donation;
 
-import com.sokol.simplemonerodonationservice.payment.PaymentEntity;
+import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEntity;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -17,16 +19,9 @@ public class DonationEntity {
     private String senderUsername;
     @Column(length = 300)
     private String donationText;
-    private String moneroSubaddress;
-    private Double amount;
     @Column(nullable = false)
-    private LocalDateTime receivedAt;
-    private LocalDateTime confirmedAt;
-    @Column(nullable = false)
-    private boolean isPaymentConfirmed = false;
-    @Column(nullable = false)
-    private boolean isPaymentExpired = false;
-    @ManyToOne(fetch = FetchType.LAZY)
+    private final LocalDateTime receivedAt = LocalDateTime.now(ZoneOffset.UTC);
+    @ManyToOne
     @JoinColumn(
             nullable = false,
             name = "user_id"
@@ -35,36 +30,19 @@ public class DonationEntity {
     @OneToOne
     @JoinColumn(
             nullable = false,
+            unique = true,
             name = "payment_id"
     )
     private PaymentEntity payment;
 
-    public DonationEntity() { }
+    protected DonationEntity() { }
 
     public DonationEntity(String senderUsername,
                           String donationText,
-                          LocalDateTime receivedAt,
                           UserEntity user,
                           PaymentEntity payment) {
         this.senderUsername = senderUsername;
         this.donationText = donationText;
-        this.receivedAt = receivedAt;
-        this.user = user;
-        this.payment = payment;
-    }
-
-    public DonationEntity(String senderUsername,
-                          String donationText,
-                          String moneroSubaddress,
-                          Double amount,
-                          LocalDateTime receivedAt,
-                          UserEntity user,
-                          PaymentEntity payment) {
-        this.senderUsername = senderUsername;
-        this.donationText = donationText;
-        this.moneroSubaddress = moneroSubaddress;
-        this.amount = amount;
-        this.receivedAt = receivedAt;
         this.user = user;
         this.payment = payment;
     }
@@ -81,45 +59,29 @@ public class DonationEntity {
         return donationText;
     }
 
-    public String getMoneroSubaddress() {
-        return moneroSubaddress;
-    }
-
-    public void setMoneroSubaddress(String moneroSubaddress) {
-        this.moneroSubaddress = moneroSubaddress;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
     public LocalDateTime getReceivedAt() {
         return receivedAt;
-    }
-
-    public LocalDateTime getConfirmedAt() {
-        return confirmedAt;
-    }
-
-    public void setConfirmedAt(LocalDateTime confirmedAt) {
-        this.confirmedAt = confirmedAt;
-    }
-
-    public boolean getIsPaymentConfirmed() {
-        return isPaymentConfirmed;
-    }
-
-    public void setIsPaymentConfirmed(boolean isPaymentConfirmed) {
-        this.isPaymentConfirmed = isPaymentConfirmed;
     }
 
     public PaymentEntity getPayment() {
         return payment;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        DonationEntity that = (DonationEntity) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        return receivedAt.equals(that.receivedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + receivedAt.hashCode();
+        return result;
+    }
 }

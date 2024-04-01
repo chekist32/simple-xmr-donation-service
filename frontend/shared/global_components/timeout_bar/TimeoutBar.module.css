@@ -1,0 +1,15 @@
+.timeout_bar_container {
+    width: 90%;
+    background-color: #51b13e;
+    display: flex;
+    text-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.timeout_bar {
+    background-color: #077d38;
+}
+
+.clock {
+    background-color: rgba(255, 0, 0, 0.0);
+}

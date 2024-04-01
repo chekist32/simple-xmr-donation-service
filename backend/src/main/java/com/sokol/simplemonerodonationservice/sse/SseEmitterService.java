@@ -1,5 +1,6 @@
 package com.sokol.simplemonerodonationservice.sse;
 
+import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.donation.DonationDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -7,23 +8,25 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class SseEmitterService {
-    private final long SSE_TIMEOUT = 24 * 60 * 60 * 1000;
-    private final SseEmitter.SseEventBuilder keepAliveSseEventBuilder = SseEmitter.event().name("keep-alive").data("keep-alive");
-    private final CopyOnWriteArrayList<SseEmitter> inMemoryDonationSseEmitterList = new CopyOnWriteArrayList<>();
-    private final ScheduledExecutorService keepAliveExecutor = new ScheduledThreadPoolExecutor(1);
-    public SseEmitterService() {
-        keepAliveExecutor.scheduleAtFixedRate(this::sendKeepAliveMessage,0, 40, TimeUnit.SECONDS);
+    private static final SseEmitter.SseEventBuilder keepAliveSseEventBuilder = SseEmitter.event().name("keep-alive").data("keep-alive");
+    private static final ConcurrentLinkedQueue<SseEmitter> inMemoryDonationSseEmitterList = new ConcurrentLinkedQueue<>();
+    private static final ScheduledExecutorService keepAliveExecutor = new ScheduledThreadPoolExecutor(1);
+
+    static {
+        keepAliveExecutor.scheduleAtFixedRate(SseEmitterService::sendKeepAliveMessage,0, SseServiceConfig.KEEP_ALIVE_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    public SseEmitter createDonationSseEmitter() {
-        SseEmitter sseEmitter = new SseEmitter(SSE_TIMEOUT);
+    private SseEmitterService() { }
+
+    public static SseEmitter createDonationSseEmitter() {
+        SseEmitter sseEmitter = new SseEmitter(SseServiceConfig.SSE_TIMEOUT);
 
         inMemoryDonationSseEmitterList.add(sseEmitter);
 
@@ -34,46 +37,44 @@ public class SseEmitterService {
         return sseEmitter;
     }
 
-    private void sendKeepAliveMessage() {
-        this.sendMessageToAllClients(inMemoryDonationSseEmitterList, keepAliveSseEventBuilder);
+    private static void sendKeepAliveMessage() {
+        sendMessageToAllClients(keepAliveSseEventBuilder);
     }
 
-    public void sendTestDonationMessageToAllClients() {
-        this.sendDonationMessageToAllClients(new DonationDTO(
+    public static void sendTestDonationMessageToAllClients() {
+        sendDonationMessageToAllClients(new DonationDTO(
                 "Username",
-                "1 XMR",
+                1,
+                CoinType.XMR.name(),
                 "This is a test (Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis)",
                 LocalDateTime.now(ZoneOffset.UTC)
         ));
     }
 
-    public void sendDonationMessageToAllClients(DonationDTO donationDTO) {
-        this.sendMessageToAllClients(inMemoryDonationSseEmitterList, donationDTO);
+    public static void sendDonationMessageToAllClients(DonationDTO donationDTO) {
+        sendMessageToAllClients(donationDTO);
     }
 
-    private void sendMessageToAllClients(CopyOnWriteArrayList<SseEmitter> sseEmitters, Object msg) {
-        for (SseEmitter sseEmitter : sseEmitters) {
+    private static void sendMessageToAllClients(Object msg) {
+        for (SseEmitter sseEmitter : inMemoryDonationSseEmitterList) {
             try {
                 sseEmitter.send(msg);
             } catch (IOException e) {
-                e.printStackTrace();
                 removeDonationSseEmitter(sseEmitter);
             }
         }
     }
-    private void sendMessageToAllClients(CopyOnWriteArrayList<SseEmitter> sseEmitters, SseEmitter.SseEventBuilder sseEventBuilder) {
-        for (SseEmitter sseEmitter : sseEmitters) {
+    private static void sendMessageToAllClients(SseEmitter.SseEventBuilder sseEventBuilder) {
+        for (SseEmitter sseEmitter : inMemoryDonationSseEmitterList) {
             try {
                 sseEmitter.send(sseEventBuilder);
             } catch (IOException e) {
-                e.printStackTrace();
                 removeDonationSseEmitter(sseEmitter);
             }
         }
     }
 
-
-    private void removeDonationSseEmitter(SseEmitter sseEmitter) {
+    private static void removeDonationSseEmitter(SseEmitter sseEmitter) {
         sseEmitter.complete();
         inMemoryDonationSseEmitterList.remove(sseEmitter);
     }

@@ -73,7 +73,7 @@ function donationCardRender(donationData) {
         </div>
 
         <div className="donation-vew-donation-card-amount">
-          {donationData && donationData.amount}
+          {donationData && (donationData.amount+" "+donationData.coinType)}
         </div>
 
         <div className="donation-vew-donation-card-donationText">

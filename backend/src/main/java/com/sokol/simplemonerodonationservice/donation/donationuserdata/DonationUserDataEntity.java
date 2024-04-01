@@ -1,9 +1,10 @@
 package com.sokol.simplemonerodonationservice.donation.donationuserdata;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
+import jakarta.persistence.*;
+
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "donation_user_data")
@@ -12,11 +13,36 @@ public class DonationUserDataEntity {
     @GeneratedValue
     private Integer id;
     private String greetingText;
+    @Column(nullable = false)
+    private double minDonationAmount;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private CryptoConfirmationType confirmationType;
+    @Column(
+            nullable = false,
+            unique = true
+    )
+    private String token = UUID.randomUUID().toString();
+    @Column(nullable = false)
+    private int timeout;
 
-    public DonationUserDataEntity() { this("Default greeting text"); }
+    public DonationUserDataEntity() {
+        this(
+                "Default greeting text",
+                0.1,
+                CryptoConfirmationType.UNCONFIRMED,
+                40 * 60 * 1000
+        );
+    }
 
-    public DonationUserDataEntity(String greetingText) {
+    public DonationUserDataEntity(String greetingText,
+                                  double minDonationAmount,
+                                  CryptoConfirmationType confirmationType,
+                                  int timeout) {
         this.greetingText = greetingText;
+        this.confirmationType = confirmationType;
+        this.setTimeout(timeout);
+        this.setMinDonationAmount(minDonationAmount);
     }
 
     public Integer getId() {
@@ -29,5 +55,55 @@ public class DonationUserDataEntity {
 
     public void setGreetingText(String greetingText) {
         this.greetingText = greetingText;
+    }
+
+    public double getMinDonationAmount() {
+        return minDonationAmount;
+    }
+
+    public void setMinDonationAmount(double minDonationAmount) {
+        this.minDonationAmount = minDonationAmount > 0 ? minDonationAmount : 0.01;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = Math.max(60, timeout);
+    }
+
+    public CryptoConfirmationType getConfirmationType() {
+        return confirmationType;
+    }
+
+    public void setConfirmationType(CryptoConfirmationType confirmationType) {
+        this.confirmationType = confirmationType;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void regenerateToken() {
+        this.token = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DonationUserDataEntity that = (DonationUserDataEntity) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        return token.equals(that.token);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + token.hashCode();
+        return result;
     }
 }

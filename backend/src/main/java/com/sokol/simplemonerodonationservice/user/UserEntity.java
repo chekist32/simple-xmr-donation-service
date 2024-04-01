@@ -6,15 +6,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer Id;
+    private Integer id;
     @Column(
             nullable = false,
             unique = true
@@ -32,19 +32,15 @@ public class UserEntity implements UserDetails {
     private Set<Role> roles = Set.of(Role.USER);
     @Column(nullable = false)
     private boolean isEnabled = false;
-    @Column(
-            nullable = false,
-            unique = true
-    )
-    private String token = UUID.randomUUID().toString();
     @OneToOne
     @JoinColumn(
             name = "donation_user_data_id",
-            unique = true
+            unique = true,
+            nullable = false
     )
     private DonationUserDataEntity donationUserData;
 
-    public UserEntity() { }
+    protected UserEntity() { }
 
     public UserEntity(String email,
                       String username,
@@ -55,7 +51,7 @@ public class UserEntity implements UserDetails {
     }
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setUsername(String username) {
@@ -129,11 +125,23 @@ public class UserEntity implements UserDetails {
         return isEnabled;
     }
 
-    public String getToken() {
-        return token;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity user = (UserEntity) o;
+
+        if (!Objects.equals(id, user.id)) return false;
+        if (!Objects.equals(username, user.username)) return false;
+        return Objects.equals(email, user.email);
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
     }
 }

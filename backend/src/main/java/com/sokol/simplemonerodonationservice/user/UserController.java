@@ -3,6 +3,7 @@ package com.sokol.simplemonerodonationservice.user;
 import com.sokol.simplemonerodonationservice.donation.DonationService;
 import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,30 +23,22 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserDataResponseDTO> retrieveUserData(Principal principal) {
-        UserDataResponseDTO userDataResponseDTO = userService.getUserDataByPrincipal(principal.getName());
-
-        return new ResponseEntity<>(userDataResponseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserDataByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDataResponseDTO> retrieveUserData(@PathVariable String username) {
-        UserDataResponseDTO userDataResponseDTO = userService.getUserDataByUsername(username);
-
-        return new ResponseEntity<>(userDataResponseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserDataByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/profile")
     public ResponseEntity<DonationUserDataDTO> retrieveDonationUserData(Principal principal) {
-        DonationUserDataDTO donationUserDataDTO = donationService.getDonationUserDataByPrincipal(principal.getName());
-
-        return new ResponseEntity<>(donationUserDataDTO, HttpStatus.OK);
+        return new ResponseEntity<>(donationService.getDonationUserDataByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
     @PutMapping("/settings/profile")
-    public ResponseEntity<DonationUserDataDTO> editUserDonationData(@RequestBody DonationUserDataDTO donationUserDataDTO, Principal principal) {
-        DonationUserDataDTO body = donationService.modifyDonationUserDataByPrincipal(principal.getName(), donationUserDataDTO);
-
-        return new ResponseEntity<>(body, HttpStatus.OK);
+    public ResponseEntity<DonationUserDataDTO> editUserDonationData(@RequestBody @Valid DonationUserDataDTO donationUserDataDTO, Principal principal) {
+        return new ResponseEntity<>(donationService.modifyDonationUserDataByPrincipal(principal.getName(), donationUserDataDTO), HttpStatus.OK);
     }
 
     @GetMapping("/settings/donation")
@@ -53,11 +46,13 @@ public class UserController {
         return new ResponseEntity<>(donationService.getDonationSettingsDataDTOByPrincipal(principal.getName()), HttpStatus.OK);
     }
 
-    @PutMapping("/settings/donation/gennewtoken")
+    @PutMapping("/settings/donation/genNewToken")
     public ResponseEntity<DonationSettingsDataDTO> generateNewUserToken(Principal principal) {
-        return new ResponseEntity<>(userService.regenerateUserTokenByPrincipal(principal.getName()), HttpStatus.CREATED);
+        return new ResponseEntity<>(donationService.regenerateDonationToken(principal.getName()), HttpStatus.CREATED);
     }
 
-
-
+    @PutMapping("/settings/donation")
+    public ResponseEntity<DonationSettingsDataDTO> updateDonationSettingsData(Principal principal, @Valid @RequestBody DonationSettingsDataDTO donationSettingsDataDTO) {
+        return new ResponseEntity<>(donationService.updateDonationSettingsData(principal.getName(), donationSettingsDataDTO), HttpStatus.CREATED);
+    }
 }

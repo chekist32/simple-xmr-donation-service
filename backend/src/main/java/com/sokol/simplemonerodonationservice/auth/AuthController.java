@@ -22,9 +22,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final String UIUrl = System.getenv("ADMIN_PANEL_UI_URL");
+    private final static String UIUrl = System.getenv("ADMIN_PANEL_UI_URL");
     private final UserService userService;
     private final EmailService emailService;
+
     public AuthController(UserService userService,
                           EmailService emailService) {
         this.userService = userService;

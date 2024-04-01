@@ -19,20 +19,24 @@ public class CustomDefaultExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleDuplicateResourceException(DuplicateResourceException ex, WebRequest request) {
         return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody(ex, request, HttpStatus.CONFLICT), HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody(ex, request, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
         return new ResponseEntity<>(HttpError.createInvalidArgumentErrorResponseBody(ex, request), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex, WebRequest request) {
         return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody(ex, request, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody(ex, request, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpError.createDefaultErrorResponseBody("", request, HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

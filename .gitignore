@@ -55,8 +55,6 @@ dist-ssr
 *.sln
 *.sw?
 
-application*.yml
-
 .env*
 
 !*.example

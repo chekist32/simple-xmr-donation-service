@@ -24,7 +24,7 @@ function DonationView() {
                 </div>
                 <div className="donation-view-donation-item-grey">donated</div>
                 <div className="donation-view-donation-item-header-amount">
-                  {item.amount}
+                  {item.amount+" "+item.coinType}
                 </div>
               </div>
               <div className="donation-view-donation-item-grey donation-view-donation-item-header-confirmedAt">
