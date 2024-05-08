@@ -65,7 +65,7 @@ public class DonationService {
     public List<DonationDTO> getAllDonations(String principal, int pageNum, int pageSize) {
         return donationRepository.findByUser(
                 findUserByPrincipal(principal),
-                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "payment.confirmedAt"))
+                PageRequest.of(Math.abs(pageNum), pageSize, Sort.by(Sort.Direction.DESC, "payment.confirmedAt"))
         )
                 .stream()
                 .map(DonationUtils::DonationEntityToDonationDTOMapper)
