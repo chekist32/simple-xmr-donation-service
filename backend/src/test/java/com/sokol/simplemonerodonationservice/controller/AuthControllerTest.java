@@ -10,6 +10,7 @@ import com.sokol.simplemonerodonationservice.auth.registration.RegistrationReque
 import com.sokol.simplemonerodonationservice.email.EmailService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserService;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,7 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = AuthController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class AuthControllerTest {
-    private final static String moreThan64Chars = UUID.randomUUID().toString()+UUID.randomUUID()+UUID.randomUUID();
+    private final static String moreThan64Chars = RandomString.make(65);
+
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired

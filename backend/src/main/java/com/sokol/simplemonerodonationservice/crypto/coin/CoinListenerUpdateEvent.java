@@ -3,8 +3,6 @@ package com.sokol.simplemonerodonationservice.crypto.coin;
 import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import org.springframework.context.ApplicationEvent;
 
-import java.time.Clock;
-
 public class CoinListenerUpdateEvent extends ApplicationEvent {
     private final DonationSettingsDataDTO donationSettingsDataDTO;
     private final String principal;

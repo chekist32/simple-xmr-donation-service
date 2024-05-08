@@ -6,7 +6,6 @@ import com.sokol.simplemonerodonationservice.crypto.coin.AbstractCoinListener;
 import monero.wallet.model.MoneroOutputWallet;
 import monero.wallet.model.MoneroTxWallet;
 import monero.wallet.model.MoneroWalletListenerI;
-import org.apache.tomcat.util.http.parser.Ranges;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigInteger;

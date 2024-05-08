@@ -1,7 +1,6 @@
 package com.sokol.simplemonerodonationservice.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
@@ -11,7 +10,7 @@ import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationU
 import com.sokol.simplemonerodonationservice.user.UserController;
 import com.sokol.simplemonerodonationservice.user.UserDataResponseDTO;
 import com.sokol.simplemonerodonationservice.user.UserService;
-import com.sun.net.httpserver.HttpPrincipal;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -36,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class UserControllerTest {
-    private final static String moreThan64Chars = UUID.randomUUID().toString()+UUID.randomUUID()+UUID.randomUUID();
-    private final static String moreThan255Chars = moreThan64Chars+moreThan64Chars+moreThan64Chars+moreThan64Chars+moreThan64Chars;
+    private final static String moreThan64Chars = RandomString.make(65);
+    private final static String moreThan255Chars = RandomString.make(256);
 
     @Autowired
     private MockMvc mockMvc;

@@ -4,9 +4,6 @@ import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinListenerUpdateEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinService;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddress.MoneroSubaddressService;
-import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
-import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 

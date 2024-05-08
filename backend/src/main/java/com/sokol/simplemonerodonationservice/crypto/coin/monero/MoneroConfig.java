@@ -1,6 +1,5 @@
 package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
-import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;
 import monero.wallet.MoneroWalletRpc;
