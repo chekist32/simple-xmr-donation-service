@@ -32,11 +32,13 @@ public class UserEntityModificationRequestEntity {
     private UserEntity user;
 
 
-    public UserEntityModificationRequestEntity() { }
+    protected UserEntityModificationRequestEntity() { }
 
-    public UserEntityModificationRequestEntity(UserEntityModificationRequestEntityType modificationRequestType,
-                                                ConfirmationTokenEntity confirmationToken,
-                                                UserEntity user) {
+    public UserEntityModificationRequestEntity(
+            UserEntityModificationRequestEntityType modificationRequestType,
+            ConfirmationTokenEntity confirmationToken,
+            UserEntity user
+    ) {
         this.modificationRequestType = modificationRequestType;
         this.confirmationToken = confirmationToken;
         this.user = user;

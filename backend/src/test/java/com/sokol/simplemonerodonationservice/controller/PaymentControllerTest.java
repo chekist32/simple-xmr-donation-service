@@ -2,6 +2,7 @@ package com.sokol.simplemonerodonationservice.controller;
 
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.payment.*;
+import com.sokol.simplemonerodonationservice.crypto.payment.service.PaymentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;

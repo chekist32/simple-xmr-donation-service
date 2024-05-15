@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.donation.DonationController;
-import com.sokol.simplemonerodonationservice.donation.DonationRequestDTO;
-import com.sokol.simplemonerodonationservice.donation.DonationResponseDTO;
-import com.sokol.simplemonerodonationservice.donation.DonationService;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationRequestDTO;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationResponseDTO;
+import com.sokol.simplemonerodonationservice.donation.notification.SSEDonationNotificationService;
+import com.sokol.simplemonerodonationservice.donation.service.DonationService;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,6 +37,8 @@ public class DonationControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private DonationService donationService;
+    @MockBean
+    private SSEDonationNotificationService sseDonationNotificationService;
     @Autowired
     private ObjectMapper objectMapper;
 

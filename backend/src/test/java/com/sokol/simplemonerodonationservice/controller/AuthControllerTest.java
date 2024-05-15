@@ -2,14 +2,14 @@ package com.sokol.simplemonerodonationservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sokol.simplemonerodonationservice.auth.AuthController;
-import com.sokol.simplemonerodonationservice.auth.ChangeEmailRequestDTO;
-import com.sokol.simplemonerodonationservice.auth.ChangePasswordRequestDTO;
-import com.sokol.simplemonerodonationservice.auth.ResetPasswordRequestDTO;
+import com.sokol.simplemonerodonationservice.auth.dto.ChangeEmailRequestDTO;
+import com.sokol.simplemonerodonationservice.auth.dto.ChangePasswordRequestDTO;
+import com.sokol.simplemonerodonationservice.auth.dto.ResetPasswordRequestDTO;
 import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenEntity;
 import com.sokol.simplemonerodonationservice.auth.registration.RegistrationRequestDTO;
 import com.sokol.simplemonerodonationservice.email.EmailService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
-import com.sokol.simplemonerodonationservice.user.UserService;
+import com.sokol.simplemonerodonationservice.user.service.UserService;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

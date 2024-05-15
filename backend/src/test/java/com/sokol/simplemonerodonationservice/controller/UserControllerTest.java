@@ -4,12 +4,12 @@ package com.sokol.simplemonerodonationservice.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
-import com.sokol.simplemonerodonationservice.donation.DonationService;
-import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
+import com.sokol.simplemonerodonationservice.donation.service.DonationServiceImpl;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationSettingsDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
 import com.sokol.simplemonerodonationservice.user.UserController;
 import com.sokol.simplemonerodonationservice.user.UserDataResponseDTO;
-import com.sokol.simplemonerodonationservice.user.UserService;
+import com.sokol.simplemonerodonationservice.user.service.UserServiceImpl;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,9 +39,9 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     @MockBean
-    private DonationService donationService;
+    private DonationServiceImpl donationServiceImpl;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -50,7 +50,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(userService.getUserDataByPrincipal(anyString()))
+        when(userServiceImpl.getUserDataByPrincipal(anyString()))
                 .thenThrow(new ResourceNotFoundException("There is no user with such principal"));
 
         mockMvc.perform(
@@ -64,7 +64,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(userService.getUserDataByPrincipal(principal.getName()))
+        when(userServiceImpl.getUserDataByPrincipal(principal.getName()))
                 .thenReturn(new UserDataResponseDTO("name", "name@email.com"));
 
         MvcResult mvcResult = mockMvc.perform(
@@ -85,7 +85,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.getDonationUserDataByPrincipal(anyString()))
+        when(donationServiceImpl.getDonationUserDataByPrincipal(anyString()))
                 .thenThrow(new ResourceNotFoundException(""));
 
         mockMvc.perform(
@@ -99,7 +99,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.getDonationUserDataByPrincipal("name"))
+        when(donationServiceImpl.getDonationUserDataByPrincipal("name"))
                 .thenReturn(new DonationUserDataDTO("name", "name@email.com"));
 
         MvcResult mvcResult = mockMvc.perform(
@@ -120,7 +120,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.modifyDonationUserDataByPrincipal(any(), any()))
+        when(donationServiceImpl.modifyDonationUserDataByPrincipal(any(), any()))
                 .thenReturn(new DonationUserDataDTO("", ""));
 
         // Blank username
@@ -153,7 +153,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.modifyDonationUserDataByPrincipal(eq(principal.getName()), any()))
+        when(donationServiceImpl.modifyDonationUserDataByPrincipal(eq(principal.getName()), any()))
                 .thenReturn(new DonationUserDataDTO("username", "greetingText"));
 
 
@@ -175,7 +175,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.getDonationSettingsDataDTOByPrincipal(anyString()))
+        when(donationServiceImpl.getDonationSettingsDataDTOByPrincipal(anyString()))
                 .thenThrow(new ResourceNotFoundException(""));
 
         mockMvc.perform(
@@ -189,7 +189,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.getDonationSettingsDataDTOByPrincipal(anyString()))
+        when(donationServiceImpl.getDonationSettingsDataDTOByPrincipal(anyString()))
                 .thenReturn(new DonationSettingsDataDTO("", "", 1, 1));
 
         mockMvc.perform(
@@ -204,7 +204,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.regenerateDonationToken(anyString()))
+        when(donationServiceImpl.regenerateDonationToken(anyString()))
                 .thenThrow(new ResourceNotFoundException(""));
 
         mockMvc.perform(
@@ -218,7 +218,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.regenerateDonationToken(principal.getName()))
+        when(donationServiceImpl.regenerateDonationToken(principal.getName()))
                 .thenReturn(new DonationSettingsDataDTO(UUID.randomUUID().toString(), "", 1, 1));
 
         mockMvc.perform(
@@ -232,7 +232,7 @@ public class UserControllerTest {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("name");
 
-        when(donationService.updateDonationSettingsData(eq(principal.getName()), any()))
+        when(donationServiceImpl.updateDonationSettingsData(eq(principal.getName()), any()))
                 .thenReturn(new DonationSettingsDataDTO("", "", 1, 1));
 
         // Blank userToken
@@ -284,10 +284,10 @@ public class UserControllerTest {
         Principal principal1 = Mockito.mock(Principal.class);
         when(principal1.getName()).thenReturn("name1");
 
-        when(donationService.updateDonationSettingsData(anyString(), any()))
+        when(donationServiceImpl.updateDonationSettingsData(anyString(), any()))
                 .thenThrow(new ResourceNotFoundException(""));
 
-        when(donationService.updateDonationSettingsData(eq(principal.getName()), any()))
+        when(donationServiceImpl.updateDonationSettingsData(eq(principal.getName()), any()))
                 .thenReturn(new DonationSettingsDataDTO("", "", 1, 1));
 
         // Blank userToken
@@ -307,10 +307,10 @@ public class UserControllerTest {
         Principal principal1 = Mockito.mock(Principal.class);
         when(principal1.getName()).thenReturn("name1");
 
-        when(donationService.updateDonationSettingsData(anyString(), any()))
+        when(donationServiceImpl.updateDonationSettingsData(anyString(), any()))
                 .thenThrow(new ResourceNotFoundException(""));
 
-        when(donationService.updateDonationSettingsData(eq(principal.getName()), any()))
+        when(donationServiceImpl.updateDonationSettingsData(eq(principal.getName()), any()))
                 .thenReturn(new DonationSettingsDataDTO("", "", 1, 1));
 
         MvcResult mvcResult = mockMvc.perform(

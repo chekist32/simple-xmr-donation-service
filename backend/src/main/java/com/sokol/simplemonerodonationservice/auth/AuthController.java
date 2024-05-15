@@ -1,12 +1,15 @@
 package com.sokol.simplemonerodonationservice.auth;
 
+import com.sokol.simplemonerodonationservice.auth.dto.ChangeEmailRequestDTO;
+import com.sokol.simplemonerodonationservice.auth.dto.ChangePasswordRequestDTO;
+import com.sokol.simplemonerodonationservice.auth.dto.ResetPasswordRequestDTO;
 import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenEntity;
 import com.sokol.simplemonerodonationservice.auth.registration.RegistrationRequestDTO;
 import com.sokol.simplemonerodonationservice.base.exception.BadRequestException;
 import com.sokol.simplemonerodonationservice.base.http.HttpError;
 import com.sokol.simplemonerodonationservice.email.EmailService;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
-import com.sokol.simplemonerodonationservice.user.UserService;
+import com.sokol.simplemonerodonationservice.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

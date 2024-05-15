@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface MoneroSubaddressRepository extends CrudRepository<MoneroSubaddressEntity, Integer> {
+public interface MoneroSubaddressRepository extends CrudRepository<MoneroSubaddressEntity, String> {
     List<MoneroSubaddressEntity> findAllByPrimaryAddress(String primaryAddress);
 
     Optional<MoneroSubaddressEntity> findFirstByPrimaryAddressAndIsIdleTrue(String primaryAddress);
