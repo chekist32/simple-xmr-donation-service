@@ -1,6 +1,6 @@
 package com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.service;
 
-import com.sokol.simplemonerodonationservice.auth.registration.service.ConfirmationTokenServiceImpl;
+import com.sokol.simplemonerodonationservice.auth.registration.service.ConfirmationTokenService;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 public class UserEntityModificationRequestServiceImpl implements UserEntityModificationRequestService {
     private final UserEntityModificationRequestEntityRepository userEntityModificationRequestEntityRepository;
     private final UserRepository userRepository;
-    private final ConfirmationTokenServiceImpl confirmationTokenService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     public UserEntityModificationRequestServiceImpl(UserEntityModificationRequestEntityRepository userEntityModificationRequestEntityRepository,
                                                     UserRepository userRepository,
-                                                    ConfirmationTokenServiceImpl confirmationTokenService) {
+                                                    ConfirmationTokenService confirmationTokenService) {
         this.userEntityModificationRequestEntityRepository = userEntityModificationRequestEntityRepository;
         this.userRepository = userRepository;
         this.confirmationTokenService = confirmationTokenService;
@@ -28,7 +28,8 @@ public class UserEntityModificationRequestServiceImpl implements UserEntityModif
         return userEntityModificationRequestEntityRepository.save(
                 new UserEntityModificationRequestEntity(
                         UserEntityModificationRequestEntityType.RESET_PASSWORD,
-                        confirmationTokenService.createConfirmationToken(user), user
+                        confirmationTokenService.createConfirmationToken(user),
+                        user
                 )
         );
     }
@@ -37,7 +38,8 @@ public class UserEntityModificationRequestServiceImpl implements UserEntityModif
         return userEntityModificationRequestEntityRepository.save(
                 new UserEntityModificationRequestEntity(
                         UserEntityModificationRequestEntityType.CHANGE_EMAIL,
-                        confirmationTokenService.createConfirmationToken(user), user
+                        confirmationTokenService.createConfirmationToken(user),
+                        user
                 ).setNewEmail(newEmail)
         );
     }
@@ -46,7 +48,8 @@ public class UserEntityModificationRequestServiceImpl implements UserEntityModif
         return userEntityModificationRequestEntityRepository.save(
                 new UserEntityModificationRequestEntity(
                         UserEntityModificationRequestEntityType.REGISTRATION,
-                        confirmationTokenService.createConfirmationToken(user), user
+                        confirmationTokenService.createConfirmationToken(user),
+                        user
                 ).setSetEnabled(setEnabled)
         );
     }

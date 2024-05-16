@@ -32,7 +32,7 @@ public class UserEntity implements UserDetails {
     private Set<Role> roles = Set.of(Role.USER);
     @Column(nullable = false)
     private boolean isEnabled = false;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(
             name = "donation_user_data_id",
             unique = true,

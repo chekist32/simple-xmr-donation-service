@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.controller;
+package com.sokol.simplemonerodonationservice.unit.controller;
 
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.payment.*;

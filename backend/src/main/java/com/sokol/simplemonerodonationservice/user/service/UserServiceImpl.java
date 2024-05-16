@@ -11,7 +11,7 @@ import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationU
 import com.sokol.simplemonerodonationservice.user.UserDataResponseDTO;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import com.sokol.simplemonerodonationservice.user.UserRepository;
-import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.service.UserEntityModificationRequestServiceImpl;
+import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.service.UserEntityModificationRequestService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final DonationUserDataRepository donationUserDataRepository;
-    private final UserEntityModificationRequestServiceImpl userEntityModificationRequestService;
+    private final UserEntityModificationRequestService userEntityModificationRequestService;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            DonationUserDataRepository donationUserDataRepository,
-                           UserEntityModificationRequestServiceImpl userEntityModificationRequestService) {
+                           UserEntityModificationRequestService userEntityModificationRequestService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.donationUserDataRepository = donationUserDataRepository;

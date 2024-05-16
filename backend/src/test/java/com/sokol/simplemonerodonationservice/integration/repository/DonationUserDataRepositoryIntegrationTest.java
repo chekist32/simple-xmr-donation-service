@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.repository;
+package com.sokol.simplemonerodonationservice.integration.repository;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataEntity;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataRepository;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Service
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
@@ -23,7 +24,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     public ConfirmationTokenEntity findConfirmationToken(String token) {
-        return confirmationTokenRepository.findConfirmationTokenEntityByToken(token)
+        return confirmationTokenRepository.findById(UUID.fromString(token))
                 .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
     }
 

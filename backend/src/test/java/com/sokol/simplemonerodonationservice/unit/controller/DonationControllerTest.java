@@ -1,4 +1,4 @@
-package com.sokol.simplemonerodonationservice.controller;
+package com.sokol.simplemonerodonationservice.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;

@@ -27,7 +27,7 @@ public class DonationEntity {
             name = "user_id"
     )
     private UserEntity user;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(
             nullable = false,
             unique = true,
