@@ -41,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public PaymentEntity confirmPayment(String paymentId, double amount) {
-        return this.confirmPayment(findPaymentById(UUID.fromString(paymentId)), amount);
+        return this.confirmPayment(findPaymentById(paymentId), amount);
     }
 
     public PaymentEntity confirmPayment(PaymentEntity payment, double amount) {
@@ -79,6 +79,14 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentEntity findPaymentById(UUID paymentId) {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no payment associated with such paymentId"));
+    }
+
+    @Override
+    public PaymentEntity findPaymentById(String paymentId) {
+        try { return this.findPaymentById(UUID.fromString(paymentId)); }
+        catch (IllegalArgumentException e) {
+           throw new ResourceNotFoundException("There is no payment associated with such paymentId");
+        }
     }
 
     @Override

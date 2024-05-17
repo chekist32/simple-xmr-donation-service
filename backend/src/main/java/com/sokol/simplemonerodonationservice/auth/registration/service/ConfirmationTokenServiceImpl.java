@@ -24,8 +24,12 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     public ConfirmationTokenEntity findConfirmationToken(String token) {
-        return confirmationTokenRepository.findById(UUID.fromString(token))
-                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+        try {
+            return confirmationTokenRepository.findById(UUID.fromString(token))
+                    .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+        } catch (IllegalArgumentException e) {
+            throw new ResourceNotFoundException("Bad token");
+        }
     }
 
     public ConfirmationTokenEntity confirmToken(String token) {

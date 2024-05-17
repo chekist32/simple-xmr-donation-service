@@ -40,13 +40,13 @@ public class CryptoCurrencyConverterImpl implements CryptoCurrencyConverter {
 
 
     public CryptoCurrencyConverterImpl() {
+        restTemplate = new RestTemplate();
         executorService.scheduleAtFixedRate(
                 this::refreshRates,
                 0,
                 30*1000L,
                 TimeUnit.MILLISECONDS
         );
-        restTemplate = new RestTemplate();
     }
     
     private void refreshRates() {

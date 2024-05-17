@@ -14,5 +14,5 @@ public interface UserEntityModificationRequestEntityRepository extends CrudRepos
            SELECT mr FROM UserEntityModificationRequestEntity mr
            WHERE mr.confirmationToken.id = :token
            """)
-    Optional<UserEntityModificationRequestEntity> findByConfirmationToken(@Param("token") String token);
+    Optional<UserEntityModificationRequestEntity> findByConfirmationToken(@Param("token") UUID token);
 }

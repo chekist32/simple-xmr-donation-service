@@ -9,6 +9,8 @@ import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.
 import com.sokol.simplemonerodonationservice.user.userentitymodificationrequest.UserEntityModificationRequestEntityType;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserEntityModificationRequestServiceImpl implements UserEntityModificationRequestService {
     private final UserEntityModificationRequestEntityRepository userEntityModificationRequestEntityRepository;
@@ -59,8 +61,12 @@ public class UserEntityModificationRequestServiceImpl implements UserEntityModif
     }
 
     private UserEntityModificationRequestEntity findUserEntityModificationRequestEntityByToken(String token) {
-        return userEntityModificationRequestEntityRepository.findByConfirmationToken(token)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+        try {
+            return userEntityModificationRequestEntityRepository.findByConfirmationToken(UUID.fromString(token))
+                    .orElseThrow(() -> new ResourceNotFoundException("Bad token"));
+        } catch (IllegalArgumentException e) {
+            throw new ResourceNotFoundException("Bad token");
+        }
     }
 
     public UserEntityModificationRequestEntity updateNewPasswordForResetPasswordModificationRequest(String token, String newPassword) {
