@@ -161,7 +161,7 @@ public class UserEntityModificationRequestServiceTest {
                         ).setSetEnabled(true))
                 );
 
-        userEntityModificationRequestService.implementUserEntityModificationRequest("anyToken");
+        userEntityModificationRequestService.implementUserEntityModificationRequest(UUID.randomUUID().toString());
 
         assertTrue(user.isEnabled());
     }
@@ -183,7 +183,7 @@ public class UserEntityModificationRequestServiceTest {
                         ).setNewPassword(newPassword))
                 );
 
-        userEntityModificationRequestService.implementUserEntityModificationRequest("anyToken");
+        userEntityModificationRequestService.implementUserEntityModificationRequest(UUID.randomUUID().toString());
 
         assertEquals(newPassword, user.getPassword());
     }
@@ -205,7 +205,7 @@ public class UserEntityModificationRequestServiceTest {
                         ).setNewPassword(newEmail))
                 );
 
-        userEntityModificationRequestService.implementUserEntityModificationRequest("anyToken");
+        userEntityModificationRequestService.implementUserEntityModificationRequest(UUID.randomUUID().toString());
 
         assertEquals(newEmail, user.getPassword());
     }
