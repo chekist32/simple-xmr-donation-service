@@ -17,7 +17,6 @@ pipeline {
     stages {
         stage("Test") {
             agent {
-                def JENKINS_UID
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21-alpine'
                     args "-v /var/run/docker.sock:/var/run/docker.sock \
