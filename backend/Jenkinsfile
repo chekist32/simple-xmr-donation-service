@@ -6,8 +6,8 @@ def get_project_version(path_to_pom) {
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-        JENKINS_UID = "$JENKINS_UID"
-        DOCKER_GID = "$DOCKER_GID"
+        JENKINS_UID = sh 'echo $JENKINS_HOME'
+        DOCKER_GID = sh 'echo $DOCKER_GID'
         PROJECT_VERSION = get_project_version("${WORKSPACE}/backend/pom.xml")
         DOCKER_HUB_CREDS = credentials('dockerhub_id')
     }
