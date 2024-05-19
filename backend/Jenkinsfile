@@ -19,7 +19,7 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
-                sh "printenv"
+                sh 'echo "JENKINS_HOME=${JENKINS_HOME} JOB_NAME=${JOB_NAME}"'
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
             }
         }
