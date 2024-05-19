@@ -8,7 +8,7 @@ pipeline {
             steps {
                 echo "Test"
                 sh 'mvn --version'
-                sh 'cd backend && mvn test'
+                sh 'cd backend && mvn dependency:go-offline && mvn test'
             }
         }
         stage("Build") {
