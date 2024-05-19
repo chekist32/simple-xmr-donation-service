@@ -8,7 +8,7 @@ pipeline {
             steps {
                 echo "Test"
                 sh 'mvn --version'
-                sh 'ls -la'
+                sh 'cd backend && mvn test'
             }
         }
         stage("Build") {
