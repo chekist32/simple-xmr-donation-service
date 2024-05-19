@@ -19,6 +19,7 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
+                sh 'ls -la /var/lib/jenkins/workspace/test-xmr-backend_dev/backend/src/test/resources/assets'
                 sh '''
                     cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
                     JENKINS_HOME=${JENKINS_HOME}
