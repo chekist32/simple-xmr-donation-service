@@ -6,7 +6,7 @@ def get_project_version(path_to_pom) {
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-        PROJECT_VERSION = get_project_version('/${WORKSPACE}/backend/pom.xml')
+        PROJECT_VERSION = get_project_version("${WORKSPACE}/backend/pom.xml")
     }
 
     agent {
