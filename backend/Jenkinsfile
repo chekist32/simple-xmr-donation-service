@@ -41,9 +41,6 @@ pipeline {
 //             when { expression { env.BRANCH_NAME == 'master' } }
 
             steps {
-                echo "Build"
-                sh 'uname -r'
-                sh 'docker buildx ls'
                 sh 'echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin'
                 sh 'cd ${WORKSPACE}/backend &&  \
                     docker buildx build \
@@ -58,7 +55,7 @@ pipeline {
 //             when { expression { env.BRANCH_NAME == 'master' } }
 
             steps {
-                echo "Publish"
+                sh 'docker push ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION}'
             }
         }
     }
