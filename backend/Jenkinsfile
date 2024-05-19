@@ -1,8 +1,6 @@
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-        JENKINS_HOME = '${JENKINS_HOME}'
-        JOB_NAME = '${JOB_NAME}'
     }
 
     agent {
@@ -21,7 +19,6 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
-                sh 'export JENKINS_HOME=${JENKINS_HOME} JOB_NAME=${JOB_NAME}'
                 sh "printenv"
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
             }
