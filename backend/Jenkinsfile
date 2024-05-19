@@ -1,13 +1,13 @@
 pipeline {
+    environment {
+        MAVEN_LOCAL_REPO = "${WORKSPACE}/.m2/repository"
+    }
+
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-alpine'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -u 963:965'
+            args "-v /var/run/docker.sock:/var/run/docker.sock -v ${JENKINS_HOME}/test_assets/${PIPELINE_NAME} -u 963:965 --env-file ${JENKINS_HOME}/test_assets/${PIPELINE_NAME}/.env.dev-test"
         }
-    }
-
-    environment {
-        MAVEN_LOCAL_REPO = "${WORKSPACE}/.m2/repository"
     }
 
     stages {
@@ -17,13 +17,19 @@ pipeline {
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline test'
             }
         }
+
         stage("Build") {
+            when { expression { env.BRANCH_NAME == 'master' } }
+
             steps {
                 echo "Build"
                 sh 'java --version'
             }
         }
+
         stage("Deploy") {
+            when { expression { env.BRANCH_NAME == 'master' } }
+
             steps {
                 echo "Deploy"
             }
