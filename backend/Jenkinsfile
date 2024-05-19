@@ -7,6 +7,7 @@ pipeline {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-jammy'
             args "-v /var/run/docker.sock:/var/run/docker.sock \
+                  -v ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets:${WORKSPACE}/backend/src/test/resources/assets \
                   -u 963:965 \
                   --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test \
                   --network host"
@@ -17,11 +18,8 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
-                sh "ls -la"
-                sh "echo ${PWD}"
-                sh "pwd"
-                sh "ls -la /backend"
-                sh "ls -la /backend/src/test/resources"
+                sh "ls -la ${WORKSPACE}/backend"
+                sh "ls -la ${WORKSPACE}/backend/src/test/resources"
                 sh "cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test"
             }
         }
