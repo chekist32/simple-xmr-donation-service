@@ -3,16 +3,11 @@ pipeline {
         MAVEN_LOCAL_REPO = "${WORKSPACE}/.m2/repository"
     }
 
-    options {
-        beforeAgent {
-            sh "cp -r ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets ${WORKSPACE}/backend/src/test/resources/"
-        }
-    }
-
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-jammy'
             args "-v /var/run/docker.sock:/var/run/docker.sock \
+                  -v ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets:/backend/src/test/resources/assets \
                   -u 963:965 \
                   --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test \
                   --network host"
