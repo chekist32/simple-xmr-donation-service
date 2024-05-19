@@ -7,7 +7,7 @@ pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
         PROJECT_VERSION = get_project_version("${WORKSPACE}/backend/pom.xml")
-        DOCKER_HUB_CREDS = credentials('dockerhub_id')
+        DOCKER_HUB_CREDS = credentials('5ad396b1-aca2-4987-92d5-b94d05c20acb')
     }
 
     agent any
