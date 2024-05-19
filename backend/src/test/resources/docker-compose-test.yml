@@ -4,6 +4,7 @@ services:
   monero-rpc:
     image: chekist32/monero-wallet-rpc:v0.18.3.1
     restart: unless-stopped
+    user: 963:963
     ports:
       - "38083:38083"
     volumes:
