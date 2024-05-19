@@ -1,8 +1,8 @@
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-        JENKINS_HOME = '${JENKINS_HOME}'
-        JOB_NAME = '${JOB_NAME}'
+        JENKINS_HOME = "${JENKINS_HOME}"
+        JOB_NAME = "${JOB_NAME}"
     }
 
     agent {
