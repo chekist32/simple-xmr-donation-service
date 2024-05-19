@@ -18,8 +18,8 @@ pipeline {
     stages {
         stage("Test") {
             steps {
-                echo "Test"
-                sh 'ls -la /var/lib/jenkins/workspace/test-xmr-backend_dev/backend/src/test/resources/assets'
+                echo "$POM_VERSION"
+
                 sh '''
                     cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
                     JENKINS_HOME=${JENKINS_HOME}
@@ -30,8 +30,9 @@ pipeline {
             }
         }
 
-        stage("Build") {
-            when { expression { env.BRANCH_NAME == 'master' } }
+        stage("Build docker image") {
+//             when { expression { env.BRANCH_NAME == 'master' } }
+
 
             steps {
                 echo "Build"
@@ -39,8 +40,10 @@ pipeline {
             }
         }
 
-        stage("Deploy") {
-            when { expression { env.BRANCH_NAME == 'master' } }
+        stage("Publish docker image") {
+//             when { expression { env.BRANCH_NAME == 'master' } }
+
+
 
             steps {
                 echo "Deploy"
