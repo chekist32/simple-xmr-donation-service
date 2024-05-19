@@ -19,8 +19,8 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
-                sh 'echo "JENKINS_HOME=${JENKINS_HOME} JOB_NAME=${JOB_NAME}" > .env'
-                sh 'ls -la'
+                sh 'echo "JENKINS_HOME=${JENKINS_HOME} JOB_NAME=${JOB_NAME}" > ${WORKSPACE}/backend/src/test/resources/assets/.env'
+                sh 'ls -la ${WORKSPACE}/backend/src/test/resources/assets'
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
             }
         }
