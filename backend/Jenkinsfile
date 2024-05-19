@@ -6,7 +6,7 @@ pipeline {
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-alpine'
-            args "-v /var/run/docker.sock:/var/run/docker.sock -v ${JENKINS_HOME}/test_assets/${JOB_NAME} -u 963:965 --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test"
+            args "-v /var/run/docker.sock:/var/run/docker.sock -v ${JENKINS_HOME}/test_assets/${JOB_NAME} -u 963:965 --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test --network host"
         }
     }
 
