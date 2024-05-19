@@ -3,13 +3,16 @@ pipeline {
         docker { image 'maven:3.9.6-eclipse-temurin-21-alpine'}
     }
 
+    environment {
+        MAVEN_LOCAL_REPO = "${WORKSPACE}/.m2/repository"
+    }
+
     stages {
         stage("Test") {
             steps {
                 echo "Test"
                 sh 'mvn --version'
-                sh 'mkdir -p /.m2/repository'
-                sh 'cd backend && mvn dependency:go-offline && mvn test'
+                sh 'cd backend && mvn dependency:go-offline test'
             }
         }
         stage("Build") {
