@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo "Test"
                 sh 'mvn --version'
-                sh 'cd backend && mvn dependency:go-offline test'
+                sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline test'
             }
         }
         stage("Build") {
