@@ -1,17 +1,16 @@
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-        WORKSPACE = '${WORKSPACE}'
     }
 
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-alpine'
             args "-v /var/run/docker.sock:/var/run/docker.sock \
-                  -v ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets:${WORKSPACE}/backend/src/test/resources/assets \
+                  -v ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/assets:${env.WORKSPACE}/backend/src/test/resources/assets \
                   -u 963:965 \
-                  -e JENKINS_HOME=${JENKINS_HOME} -e JOB_NAME=${JOB_NAME} \
-                  --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test \
+                  -e JENKINS_HOME=${env.JENKINS_HOME} -e JOB_NAME=${env.JOB_NAME} \
+                  --env-file ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/.env.dev-test \
                   --network host"
         }
     }
