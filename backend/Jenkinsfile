@@ -1,6 +1,12 @@
+def get_project_version(path_to_pom) {
+    def pom_model = readMavenPom file: path_to_pom
+    return pom_model.version;
+}
+
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
+        PROJECT_VERSION = get_project_version('/${WORKSPACE}/backend/pom.xml')
     }
 
     agent {
