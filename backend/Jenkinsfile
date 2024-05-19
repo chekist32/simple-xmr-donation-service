@@ -10,7 +10,7 @@ pipeline {
                   -v ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets:${WORKSPACE}/backend/src/test/resources/assets \
                   -u 963:965 \
                   -e JENKINS_HOME=${JENKINS_HOME} -e JOB_NAME=${JOB_NAME} \
-                  --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/env.dev-test \
+                  --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test \
                   --network host'
         }
     }
