@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage("Build docker image") {
+        stage("Build and Push docker image") {
 //             when { expression { env.BRANCH_NAME == 'master' } }
 
             steps {
@@ -47,15 +47,7 @@ pipeline {
                         --build-arg VERSION=${PROJECT_VERSION} \
                         --tag ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION} \
                         -o type=image \
-                        --platform=linux/arm64,linux/amd64 .'
-            }
-        }
-
-        stage("Publish docker image") {
-//             when { expression { env.BRANCH_NAME == 'master' } }
-
-            steps {
-                sh 'docker push ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION}'
+                        --platform=linux/arm64,linux/amd64 --push .'
             }
         }
     }
