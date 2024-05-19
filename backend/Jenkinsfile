@@ -8,6 +8,7 @@ pipeline {
             steps {
                 echo "Test"
                 sh 'mvn --version'
+                sh 'mkdir -p /.m2/repository'
                 sh 'cd backend && mvn dependency:go-offline && mvn test'
             }
         }
