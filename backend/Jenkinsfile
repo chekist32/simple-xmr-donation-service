@@ -3,9 +3,11 @@ pipeline {
         MAVEN_LOCAL_REPO = "${WORKSPACE}/.m2/repository"
     }
 
-    beforeAgent {
-            sh "cp -r ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets {$WORKSPACE}/backend/src/test/resources"
+    options {
+        beforeAgent {
+            sh "cp -r ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets ${WORKSPACE}/backend/src/test/resources"
         }
+    }
 
     agent {
         docker {
