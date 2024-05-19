@@ -14,7 +14,6 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
-                sh 'ls -la /var/run/docker.sock && groups $USER'
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline test'
             }
         }
