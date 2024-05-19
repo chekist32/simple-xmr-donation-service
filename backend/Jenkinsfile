@@ -24,7 +24,7 @@ pipeline {
     stages {
         stage("Test") {
             steps {
-                echo "$POM_VERSION"
+                echo "$PROJECT_VERSION"
 
                 sh '''
                     cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
