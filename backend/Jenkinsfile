@@ -17,6 +17,8 @@ pipeline {
         stage("Test") {
             steps {
                 echo "Test"
+                sh "ls -la"
+                sh "ls -la /backend"
                 sh "ls -la /backend/src/test/resources"
                 sh "cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test"
             }
