@@ -42,7 +42,7 @@ pipeline {
 
             steps {
                 echo "Build"
-                sh 'ls -la /.dockerenv'
+                sh 'docker buildx ls'
                 sh 'echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin'
                 sh 'cd ${WORKSPACE}/backend &&  \
                     docker buildx build \
