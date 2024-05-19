@@ -60,7 +60,7 @@ public class AuthApiTest {
     static {
         postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine");
         try {
-            moneroWallerRpcContainer = new DockerComposeContainer<>(ResourceUtils.getFile("classpath:docker-compose-test.yml"))
+            moneroWallerRpcContainer = new DockerComposeContainer<>(ResourceUtils.getFile("classpath:assets/docker-compose-test.yml"))
                     .withExposedService("monero-rpc", 38083)
                     .withLocalCompose(false);
         } catch (FileNotFoundException e) { throw new RuntimeException(e); }
