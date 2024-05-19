@@ -42,7 +42,7 @@ pipeline {
 
             steps {
                 echo "Build"
-                sh 'echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --'
+                sh 'echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin'
                 sh 'cd ${WORKSPACE}/backend &&  \
                     docker buildx build \
                         --tag ${DOCKER_HUB_CREDS_USR}/monero-wallet-rpc:${PROJECT_VERSION} \
