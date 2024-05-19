@@ -7,7 +7,7 @@ pipeline {
         docker {
             image 'maven:3.9.6-eclipse-temurin-21-jammy'
             args "-v /var/run/docker.sock:/var/run/docker.sock \
-                  -v ${JENKINS_HOME}/test_assets/${JOB_NAME}:/backend/src/test/resources/assets \
+                  -v ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets:/backend/src/test/resources/assets \
                   -u 963:965 \
                   --env-file ${JENKINS_HOME}/test_assets/${JOB_NAME}/.env.dev-test \
                   --network host"
