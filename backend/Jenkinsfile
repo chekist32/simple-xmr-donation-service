@@ -5,7 +5,7 @@ pipeline {
 
     options {
         beforeAgent {
-            sh "cp -r ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets ${WORKSPACE}/backend/src/test/resources"
+            sh "cp -r ${JENKINS_HOME}/test_assets/${JOB_NAME}/assets ${WORKSPACE}/backend/src/test/resources/"
         }
     }
 
