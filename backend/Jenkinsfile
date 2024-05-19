@@ -20,6 +20,7 @@ pipeline {
             steps {
                 echo "Test"
                 sh 'ls -la ${WORKSPACE}/backend'
+                sh "echo $JENKINS_HOME"
                 sh 'ls -la ${WORKSPACE}/backend/src/test/resources'
                 sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
             }
