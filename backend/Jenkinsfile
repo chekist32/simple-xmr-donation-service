@@ -40,9 +40,11 @@ pipeline {
                             cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
                             JENKINS_HOME=${JENKINS_HOME}
                             JOB_NAME=${JOB_NAME}
+                            JENKINS_UID=${JENKINS_UID}
+                            JENKINS_GID=${JENKINS_GID}
                             EOF
                         '''
-                        sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
+                        sh 'cd ${WORKSPACE}/backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
                     }
                 }
             }
