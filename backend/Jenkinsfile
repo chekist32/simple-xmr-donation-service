@@ -58,7 +58,8 @@ pipeline {
                 sh 'cd ${WORKSPACE}/backend &&  \
                     docker buildx build \
                         --build-arg VERSION=${PROJECT_VERSION} \
-                        --tag ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION} \
+                        -t ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION} \
+                        -t ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:latest \
                         -o type=image \
                         --platform=linux/arm64,linux/amd64 --push .'
             }
