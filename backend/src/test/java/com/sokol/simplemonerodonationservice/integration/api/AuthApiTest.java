@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.ResourceUtils;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -42,7 +43,7 @@ public class AuthApiTest {
     @Container
     private static PostgreSQLContainer<?> postgresContainer;
     @Container
-    private static DockerComposeContainer<?> moneroWallerRpcContainer;
+    private static ComposeContainer moneroWallerRpcContainer;
     @RegisterExtension
     private static GreenMailExtension greenMailExtension;
 
@@ -60,7 +61,7 @@ public class AuthApiTest {
     static {
         postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine");
         try {
-            moneroWallerRpcContainer = new DockerComposeContainer<>(ResourceUtils.getFile("classpath:assets/docker-compose-test.yml"))
+            moneroWallerRpcContainer = new ComposeContainer(ResourceUtils.getFile("classpath:assets/docker-compose-test.yml"))
                     .withExposedService("monero-rpc", 38083)
                     .withLocalCompose(false);
         } catch (FileNotFoundException e) { throw new RuntimeException(e); }
