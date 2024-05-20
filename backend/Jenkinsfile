@@ -34,7 +34,6 @@ pipeline {
                                       -e JENKINS_HOME=${env.JENKINS_HOME} -e JOB_NAME=${env.JOB_NAME} \
                                       --env-file ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/.env.dev-test \
                                       --network host"
-                    sh 'printenv'
 
                     dockerImage.inside(dockerArgs) {
                         sh '''
