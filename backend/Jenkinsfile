@@ -16,23 +16,25 @@ pipeline {
 
     stages {
         stage("Test") {
-            script {
-                def dockerImage = docker.image('maven:3.9.6-eclipse-temurin-21-alpine')
-                def dockerArgs = "-v /var/run/docker.sock:/var/run/docker.sock \
-                                  -v ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/assets:${env.WORKSPACE}/backend/src/test/resources/assets \
-                                  -u ${env.JENKINS_UID}:${env.DOCKER_GID} \
-                                  -e JENKINS_HOME=${env.JENKINS_HOME} -e JOB_NAME=${env.JOB_NAME} \
-                                  --env-file ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/.env.dev-test \
-                                  --network host"
+            steps {
+                script {
+                    def dockerImage = docker.image('maven:3.9.6-eclipse-temurin-21-alpine')
+                    def dockerArgs = "-v /var/run/docker.sock:/var/run/docker.sock \
+                                      -v ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/assets:${env.WORKSPACE}/backend/src/test/resources/assets \
+                                      -u ${env.JENKINS_UID}:${env.DOCKER_GID} \
+                                      -e JENKINS_HOME=${env.JENKINS_HOME} -e JOB_NAME=${env.JOB_NAME} \
+                                      --env-file ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/.env.dev-test \
+                                      --network host"
 
-                dockerImage.inside(dockerArgs) {
-                    sh '''
-                        cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
-                        JENKINS_HOME=${JENKINS_HOME}
-                        JOB_NAME=${JOB_NAME}
-                        EOF
-                    '''
-                    sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
+                    dockerImage.inside(dockerArgs) {
+                        sh '''
+                            cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
+                            JENKINS_HOME=${JENKINS_HOME}
+                            JOB_NAME=${JOB_NAME}
+                            EOF
+                        '''
+                        sh 'cd backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
+                    }
                 }
             }
         }
