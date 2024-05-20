@@ -1,5 +1,9 @@
 package com.sokol.simplemonerodonationservice.crypto.payment;
 
+import com.sokol.simplemonerodonationservice.base.exception.BadRequestException;
+import com.sokol.simplemonerodonationservice.crypto.payment.event.ConfirmedPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.event.ExpiredPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.service.PaymentService;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +28,11 @@ public class PaymentController {
 
     @GetMapping("/{paymentId}/status")
     public DeferredResult<ResponseEntity<Object>> getPaymentStatus(@PathVariable String paymentId) {
-        UUID paymentIdUUID = UUID.fromString(paymentId);
+        UUID paymentIdUUID = null;
+
+        try { paymentIdUUID = UUID.fromString(paymentId); }
+        catch (IllegalArgumentException e) { throw new BadRequestException("Invalid paymentId"); }
+
         if (pendingDeferredResults.containsKey(paymentIdUUID)) return pendingDeferredResults.get(paymentIdUUID);
 
         PaymentEntity payment = paymentService.findPaymentById(paymentIdUUID);

@@ -1,0 +1,71 @@
+def get_project_version(path_to_pom) {
+    def pom_model = readMavenPom file: path_to_pom
+    return pom_model.version;
+}
+
+def load_env_variables_from_file(path) {
+    def props = readProperties file: path
+    for (prop in props) {
+        env."${prop.key}" = prop.value
+    }
+}
+
+pipeline {
+    environment {
+        MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
+        PROJECT_VERSION = get_project_version("${WORKSPACE}/backend/pom.xml")
+        DOCKER_HUB_CREDS = credentials('dockerhub_id')
+    }
+
+    agent any
+
+    stages {
+        stage("Preparation") {
+            steps { script { load_env_variables_from_file('/etc/environment') } }
+        }
+
+        stage("Test") {
+            steps {
+                script {
+                    def dockerImage = docker.image('maven:3.9.6-eclipse-temurin-21-alpine')
+                    def dockerArgs = "-v /var/run/docker.sock:/var/run/docker.sock \
+                                      -v ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/assets:${env.WORKSPACE}/backend/src/test/resources/assets \
+                                      -u ${env.JENKINS_UID}:${env.DOCKER_GID} \
+                                      -e JENKINS_HOME=${env.JENKINS_HOME} -e JOB_NAME=${env.JOB_NAME} \
+                                      --env-file ${env.JENKINS_HOME}/test_assets/${env.JOB_NAME}/.env.dev-test \
+                                      --network host"
+
+                    dockerImage.inside(dockerArgs) {
+                        sh '''
+                            cat > ${WORKSPACE}/backend/src/test/resources/assets/.env <<EOF
+                            JENKINS_HOME=${JENKINS_HOME}
+                            JOB_NAME=${JOB_NAME}
+                            JENKINS_UID=${JENKINS_UID}
+                            JENKINS_GID=${JENKINS_GID}
+                            EOF
+                        '''
+                        sh 'cd ${WORKSPACE}/backend && mvn -Dmaven.repo.local=${MAVEN_LOCAL_REPO} dependency:go-offline clean test'
+                    }
+                }
+            }
+        }
+
+        stage("Build and Push docker image") {
+            when { expression { env.BRANCH_NAME == 'master' } }
+
+            steps {
+                sh 'echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin'
+                sh 'cd ${WORKSPACE}/backend &&  \
+                    docker buildx build \
+                        --build-arg VERSION=${PROJECT_VERSION} \
+                        -t ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:${PROJECT_VERSION} \
+                        -t ${DOCKER_HUB_CREDS_USR}/simple-xmr-donation-service-backend:latest \
+                        -o type=image \
+                        --platform=linux/arm64,linux/amd64 --push .'
+            }
+        }
+    }
+    post {
+        always { sh 'docker logout' }
+    }
+}

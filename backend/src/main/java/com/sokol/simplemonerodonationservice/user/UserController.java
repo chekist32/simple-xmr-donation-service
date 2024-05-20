@@ -1,8 +1,9 @@
 package com.sokol.simplemonerodonationservice.user;
 
-import com.sokol.simplemonerodonationservice.donation.DonationService;
-import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationSettingsDataDTO;
+import com.sokol.simplemonerodonationservice.donation.service.DonationService;
+import com.sokol.simplemonerodonationservice.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

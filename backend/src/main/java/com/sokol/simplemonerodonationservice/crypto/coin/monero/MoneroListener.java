@@ -2,11 +2,10 @@ package com.sokol.simplemonerodonationservice.crypto.coin.monero;
 
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
 import com.sokol.simplemonerodonationservice.crypto.CryptoTransfer;
-import com.sokol.simplemonerodonationservice.crypto.coin.AbstractCoinListener;
+import com.sokol.simplemonerodonationservice.crypto.coin.listener.AbstractCoinListener;
 import monero.wallet.model.MoneroOutputWallet;
 import monero.wallet.model.MoneroTxWallet;
 import monero.wallet.model.MoneroWalletListenerI;
-import org.apache.tomcat.util.http.parser.Ranges;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigInteger;
@@ -51,14 +50,12 @@ public class MoneroListener extends AbstractCoinListener implements MoneroWallet
     }
 
     @Override
-    protected void onReceived(CryptoTransfer transfer) {
+    public void onReceived(CryptoTransfer transfer) {
         publishIncomingCryptoTransactionEvent(transfer);
     }
 
     @Override
-    protected void onSpent(CryptoTransfer transfer) {
-
-    }
+    public void onSpent(CryptoTransfer transfer) { }
 
     public void updateCryptoConfirmationType(CryptoConfirmationType confirmationType) {
         this.confirmationType = confirmationType;

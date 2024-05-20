@@ -2,14 +2,12 @@ package com.sokol.simplemonerodonationservice.crypto.coin.monero.monerosubaddres
 
 import com.sokol.simplemonerodonationservice.base.exception.ResourceNotFoundException;
 import com.sokol.simplemonerodonationservice.crypto.CryptoConfirmationType;
-import com.sokol.simplemonerodonationservice.crypto.coin.CoinListenerUpdateEvent;
 import com.sokol.simplemonerodonationservice.crypto.coin.CoinType;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroListener;
 import com.sokol.simplemonerodonationservice.crypto.coin.monero.MoneroUtils;
-import com.sokol.simplemonerodonationservice.crypto.payment.ConfirmedPaymentEvent;
-import com.sokol.simplemonerodonationservice.crypto.payment.ExpiredPaymentEvent;
-import com.sokol.simplemonerodonationservice.crypto.payment.PaymentEvent;
-import com.sokol.simplemonerodonationservice.donation.DonationSettingsDataDTO;
+import com.sokol.simplemonerodonationservice.crypto.payment.event.ConfirmedPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.event.ExpiredPaymentEvent;
+import com.sokol.simplemonerodonationservice.crypto.payment.event.PaymentEvent;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import monero.wallet.MoneroWalletRpc;
@@ -24,7 +22,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class MoneroSubaddressService {
     private final MoneroSubaddressRepository moneroSubaddressRepository;
     private final MoneroWalletRpc wallet;
