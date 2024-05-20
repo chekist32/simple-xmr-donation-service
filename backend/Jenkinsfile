@@ -3,11 +3,16 @@ def get_project_version(path_to_pom) {
     return pom_model.version;
 }
 
+def load_env_variables_from_file(path) {
+    def props = readProperties file: path
+    for (prop in props) {
+        env."${prop.key}" = prop.value
+    }
+}
+
 pipeline {
     environment {
         MAVEN_LOCAL_REPO = '${WORKSPACE}/.m2/repository'
-//         JENKINS_UID = sh(script: 'echo $JENKINS_UID', returnStdout: true)
-//         DOCKER_GID = sh(script: 'echo $DOCKER_GID', returnStdout: true)
         PROJECT_VERSION = get_project_version("${WORKSPACE}/backend/pom.xml")
         DOCKER_HUB_CREDS = credentials('dockerhub_id')
     }
@@ -15,6 +20,10 @@ pipeline {
     agent any
 
     stages {
+        stage("Preparation") {
+            steps { script { load_env_variables_from_file('/etc/environment') } }
+        }
+
         stage("Test") {
             steps {
                 script {
