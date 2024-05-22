@@ -67,7 +67,6 @@ public class MoneroSubaddressService {
         return this.getIdleDonationMoneroSubaddress(moneroAccount);
     }
 
-    @Transactional
     public MoneroSubaddressEntity getIdleDonationMoneroSubaddress(MoneroAccount account) {
         MoneroSubaddressEntity IdleDonationMoneroSubaddress =
                 moneroSubaddressRepository.findFirstByPrimaryAddressAndIsIdleTrue(account.getPrimaryAddress())
@@ -114,7 +113,6 @@ public class MoneroSubaddressService {
     }
 
     @EventListener(classes = {ConfirmedPaymentEvent.class, ExpiredPaymentEvent.class})
-    @Transactional
     protected void handlePaymentEvent(PaymentEvent paymentEvent) {
         if (paymentEvent.getPayment().getCoinType() == CoinType.XMR)
             moneroSubaddressRepository.updateIsIdleBySubaddress(
