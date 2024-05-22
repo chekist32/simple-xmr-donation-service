@@ -1,7 +1,11 @@
 package com.sokol.simplemonerodonationservice.donation;
 
 import com.sokol.simplemonerodonationservice.donation.donationuserdata.DonationUserDataDTO;
-import com.sokol.simplemonerodonationservice.sse.SseEmitterService;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationDTO;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationRequestDTO;
+import com.sokol.simplemonerodonationservice.donation.dto.DonationResponseDTO;
+import com.sokol.simplemonerodonationservice.donation.notification.SSEDonationNotificationService;
+import com.sokol.simplemonerodonationservice.donation.service.DonationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,9 +21,11 @@ import java.util.List;
 @RequestMapping("/api/donation")
 public class DonationController {
     private final DonationService donationService;
+    private final SSEDonationNotificationService sseDonationNotificationService;
 
-    public DonationController(DonationService donationService) {
+    public DonationController(DonationService donationService, SSEDonationNotificationService sseDonationNotificationService) {
         this.donationService = donationService;
+        this.sseDonationNotificationService = sseDonationNotificationService;
     }
 
     @GetMapping("/getAll")
@@ -39,13 +45,13 @@ public class DonationController {
 
     @GetMapping("/test")
     public void sendTestDonation() {
-        SseEmitterService.sendTestDonationMessageToAllClients();
+        sseDonationNotificationService.sendTestDonationMessageToAllClients();
     }
 
     @GetMapping(value = "/emitter", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter donationSseEmitter(@RequestParam("token") String token) {
         if (!donationService.validateToken(token)) throw new AccessDeniedException("Bad token");
-        return SseEmitterService.createDonationSseEmitter();
+        return sseDonationNotificationService.createDonationSseEmitter();
     }
 
     @GetMapping("/donate/{username}")

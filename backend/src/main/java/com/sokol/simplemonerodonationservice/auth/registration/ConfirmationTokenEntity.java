@@ -13,7 +13,8 @@ import java.util.UUID;
 public class ConfirmationTokenEntity {
     private final static long EXPIRATION_TIME = 24;
     @Id
-    private final String token = UUID.randomUUID().toString();
+    @GeneratedValue
+    private UUID token;
     @Column(nullable = false)
     private final LocalDateTime expirationDate = LocalDateTime.now(ZoneOffset.UTC).plusHours(EXPIRATION_TIME);
     private LocalDateTime confirmedAt;
@@ -33,7 +34,7 @@ public class ConfirmationTokenEntity {
 
     protected ConfirmationTokenEntity() { }
 
-    public String getToken() {
+    public UUID getToken() {
         return token;
     }
 

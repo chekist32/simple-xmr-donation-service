@@ -3,6 +3,7 @@ package com.sokol.simplemonerodonationservice.user.userentitymodificationrequest
 import com.sokol.simplemonerodonationservice.auth.registration.ConfirmationTokenEntity;
 import com.sokol.simplemonerodonationservice.user.UserEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Table(name = "user_modification_request")
 public class UserEntityModificationRequestEntity {
     @Id
-    @GeneratedValue
+    @UuidGenerator
     private UUID id;
     private String newEmail;
     private String newPassword;
@@ -18,7 +19,7 @@ public class UserEntityModificationRequestEntity {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserEntityModificationRequestEntityType modificationRequestType;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(
             name = "confirmation_token_id",
             nullable = false
@@ -32,11 +33,13 @@ public class UserEntityModificationRequestEntity {
     private UserEntity user;
 
 
-    public UserEntityModificationRequestEntity() { }
+    protected UserEntityModificationRequestEntity() { }
 
-    public UserEntityModificationRequestEntity(UserEntityModificationRequestEntityType modificationRequestType,
-                                                ConfirmationTokenEntity confirmationToken,
-                                                UserEntity user) {
+    public UserEntityModificationRequestEntity(
+            UserEntityModificationRequestEntityType modificationRequestType,
+            ConfirmationTokenEntity confirmationToken,
+            UserEntity user
+    ) {
         this.modificationRequestType = modificationRequestType;
         this.confirmationToken = confirmationToken;
         this.user = user;
