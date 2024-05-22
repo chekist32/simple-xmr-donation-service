@@ -28,7 +28,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
-    public final List<String> ALLOWED_ORIGINS = Arrays.stream(System.getenv("ALLOWED_ORIGINS").split(",")).toList();
+    private final List<String> ALLOWED_ORIGINS = Arrays.stream(System.getenv("ALLOWED_ORIGINS").split(",")).toList();
 
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
