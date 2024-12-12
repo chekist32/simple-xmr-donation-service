@@ -1,3 +1,7 @@
+# Archived Repository
+This repository has been archived and is no longer maintained.  
+Please visit the [Salmon Donate Project](https://github.com/salmon-donate/salmon-donate).
+
 # Simple monero donation service 
 
 Selfhosted monero donation system written with [Spring Boot](https://spring.io/projects/spring-boot), Java (backend) and [React](https://react.dev/), JavaScript (frontend).
